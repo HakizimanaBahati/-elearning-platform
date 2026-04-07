@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1775563140342,
+      "tag": "0000_lowly_darkstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1775563505416,
+      "tag": "0001_fluffy_vanisher",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1775563626941,
+      "tag": "0002_small_chat",
+      "breakpoints": true
+    }
+  ]
+}

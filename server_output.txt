@@ -1,0 +1,15 @@
+[OAuth] Initialized with baseURL: 
+[OAuth] ERROR: OAUTH_SERVER_URL is not configured! Set OAUTH_SERVER_URL environment variable.
+[Router] Initializing TRPC routers...
+Server running on http://localhost:3000/
+[33m[1m(!) %VITE_ANALYTICS_ENDPOINT% is not defined in env variables found in /register. Is the variable mistyped?[22m[39m
+[33m[1m(!) %VITE_ANALYTICS_WEBSITE_ID% is not defined in env variables found in /register. Is the variable mistyped?[22m[39m
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[33mMalformed URI sequence in request URL: /%VITE_ANALYTICS_ENDPOINT%/umami[39m
+URIError: Failed to decode param '/%VITE_ANALYTICS_ENDPOINT%/umami'
+    at decodeURIComponent (<anonymous>)
+    at decode_param (C:\xampp\htdocs\e-hub\elearning-platform\node_modules\.pnpm\express@4.21.2\node_modules\express\lib\router\layer.js:172:12)
+    at Layer.match (C:\xampp\htdocs\e-hub\elearning-platform\node_modules\.pnpm\express@4.21.2\node_modules\express\lib\router\layer.js:123:27)
+    at matchLayer (C:\xampp\htdocs\e-hub\elearning-platform\node_modules\.pnpm\express@4.21.2\node_modules\express\lib\router\index.js:585:18)
+    at Immediate.next [as _onImmediate] (C:\xampp\htdocs\e-hub\elearning-platform\node_modules\.pnpm\express@4.21.2\node_modules\express\lib\router\index.js:226:15)
+    at process.processImmediate (node:internal/timers:506:21)
