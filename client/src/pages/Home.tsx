@@ -52,7 +52,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BookOpen className="w-8 h-8 text-indigo-600" />
-            <span className="text-2xl font-bold text-slate-900">EduLearn</span>
+            <span className="text-2xl font-bold text-slate-900">E-HUB</span>
           </div>
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
@@ -170,7 +170,7 @@ export default function Home() {
       <section className="py-20 bg-slate-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Why Choose EduLearn?</h2>
+            <h2 className="text-4xl font-bold mb-4">Why Choose E-HUB?</h2>
             <p className="text-xl text-slate-300">
               Everything you need to learn, teach, and succeed
             </p>
@@ -230,7 +230,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Start Learning?</h2>
           <p className="text-xl mb-8 text-indigo-100">
-            Join thousands of students already learning on EduLearn. Start your
+            Join thousands of students already learning on E-HUB. Start your
             journey today!
           </p>
           <Button
@@ -250,7 +250,7 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <BookOpen className="w-6 h-6 text-indigo-400" />
-                <span className="text-lg font-bold text-white">EduLearn</span>
+                <span className="text-lg font-bold text-white">E-HUB</span>
               </div>
               <p className="text-sm">Empowering learners worldwide</p>
             </div>
@@ -311,7 +311,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-slate-800 pt-8 text-center text-sm">
-            <p>&copy; 2024 EduLearn. All rights reserved.</p>
+            <p>&copy; 2024 E-HUB. All rights reserved.</p>
           </div>
         </div>
       </footer>

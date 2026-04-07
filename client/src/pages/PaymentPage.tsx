@@ -3,14 +3,28 @@ import { useParams, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CreditCard, Smartphone, Building2, CheckCircle, AlertCircle } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  CreditCard,
+  Smartphone,
+  Building2,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react";
 import { toast } from "sonner";
 
 export default function PaymentPage() {
   const { courseId } = useParams<{ courseId: string }>();
   const [, navigate] = useLocation();
-  const [paymentMethod, setPaymentMethod] = useState<"mobile" | "bank" | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<"mobile" | "bank" | null>(
+    null
+  );
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentComplete, setPaymentComplete] = useState(false);
 
@@ -20,7 +34,7 @@ export default function PaymentPage() {
     setIsProcessing(true);
     try {
       // Simulate mobile money payment processing
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 2000));
       setPaymentComplete(true);
       toast.success("Payment successful! Certificate will be generated.");
       setTimeout(() => navigate("/certificates"), 2000);
@@ -35,7 +49,7 @@ export default function PaymentPage() {
     setIsProcessing(true);
     try {
       // Simulate bank payment processing
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 2000));
       setPaymentComplete(true);
       toast.success("Payment successful! Certificate will be generated.");
       setTimeout(() => navigate("/certificates"), 2000);
@@ -56,9 +70,12 @@ export default function PaymentPage() {
                 <CheckCircle className="w-8 h-8 text-green-600" />
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">Payment Successful!</h2>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+              Payment Successful!
+            </h2>
             <p className="text-slate-600 mb-6">
-              Your payment has been processed. Your certificate is being generated and will be available shortly.
+              Your payment has been processed. Your certificate is being
+              generated and will be available shortly.
             </p>
             <Button
               onClick={() => navigate("/certificates")}
@@ -78,7 +95,9 @@ export default function PaymentPage() {
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-2">Get Your Certificate</h1>
-          <p className="text-indigo-100">Complete your course and earn a recognized certificate</p>
+          <p className="text-indigo-100">
+            Complete your course and earn a recognized certificate
+          </p>
         </div>
       </div>
 
@@ -103,7 +122,8 @@ export default function PaymentPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-slate-600">
-                  Pay securely using mobile money services like MTN Mobile Money, Airtel Money, or Vodafone Cash.
+                  Pay securely using mobile money services like MTN Mobile
+                  Money, Airtel Money, or Vodafone Cash.
                 </p>
 
                 {paymentMethod === "mobile" && (
@@ -119,7 +139,9 @@ export default function PaymentPage() {
                         <SelectContent>
                           <SelectItem value="mtn">MTN Mobile Money</SelectItem>
                           <SelectItem value="airtel">Airtel Money</SelectItem>
-                          <SelectItem value="vodafone">Vodafone Cash</SelectItem>
+                          <SelectItem value="vodafone">
+                            Vodafone Cash
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -172,25 +194,32 @@ export default function PaymentPage() {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-slate-600">Bank Name:</span>
-                        <span className="font-semibold">Ghana Commercial Bank</span>
+                        <span className="font-semibold">
+                          Ghana Commercial Bank
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600">Account Name:</span>
-                        <span className="font-semibold">EduLearn Platform</span>
+                        <span className="font-semibold">E-HUB Platform</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600">Account Number:</span>
-                        <span className="font-mono font-semibold">1234567890</span>
+                        <span className="font-mono font-semibold">
+                          1234567890
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600">SWIFT Code:</span>
-                        <span className="font-mono font-semibold">GCBLGHAC</span>
+                        <span className="font-mono font-semibold">
+                          GCBLGHAC
+                        </span>
                       </div>
                     </div>
 
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                       <p className="text-xs text-blue-800">
-                        ℹ️ Please use your course ID as the reference: <span className="font-semibold">{courseId}</span>
+                        ℹ️ Please use your course ID as the reference:{" "}
+                        <span className="font-semibold">{courseId}</span>
                       </p>
                     </div>
 
@@ -216,13 +245,17 @@ export default function PaymentPage() {
               <CardContent className="space-y-4">
                 <div>
                   <p className="text-sm text-slate-600 mb-1">Course</p>
-                  <p className="font-semibold text-slate-900">Advanced Web Development</p>
+                  <p className="font-semibold text-slate-900">
+                    Advanced Web Development
+                  </p>
                 </div>
 
                 <div className="border-t pt-4 space-y-3">
                   <div className="flex justify-between">
                     <span className="text-slate-600">Subtotal</span>
-                    <span className="font-semibold">${coursePrice.toFixed(2)}</span>
+                    <span className="font-semibold">
+                      ${coursePrice.toFixed(2)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-600">Tax (0%)</span>
@@ -240,13 +273,17 @@ export default function PaymentPage() {
                   <div className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-green-800">
-                      <span className="font-semibold">Certificate included</span> - Valid worldwide
+                      <span className="font-semibold">
+                        Certificate included
+                      </span>{" "}
+                      - Valid worldwide
                     </p>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-green-800">
-                      <span className="font-semibold">Lifetime access</span> - Revisit anytime
+                      <span className="font-semibold">Lifetime access</span> -
+                      Revisit anytime
                     </p>
                   </div>
                 </div>
@@ -254,7 +291,8 @@ export default function PaymentPage() {
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-2">
                   <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <p className="text-xs text-blue-800">
-                    Your payment is secure and encrypted. We accept all major payment methods.
+                    Your payment is secure and encrypted. We accept all major
+                    payment methods.
                   </p>
                 </div>
               </CardContent>

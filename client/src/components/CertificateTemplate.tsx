@@ -15,7 +15,7 @@ export function CertificateTemplate({
   courseTitle,
   completionDate,
   certificateId,
-  instructorName = "EduLearn Team",
+  instructorName = "E-HUB Team",
 }: CertificateTemplateProps) {
   const certificateRef = useRef<HTMLDivElement>(null);
 

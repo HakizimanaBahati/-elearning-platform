@@ -7,9 +7,9 @@ import { toast } from "sonner";
 
 export default function AdminSettings() {
   const [settings, setSettings] = useState({
-    platformName: "EduLearn",
-    platformEmail: "support@edulearn.com",
-    platformUrl: "https://edulearn.com",
+    platformName: "E-HUB",
+    platformEmail: "support@ehub.com",
+    platformUrl: "https://ehub.com",
     maxUploadSize: 500,
     certificateTemplate: "default",
     maintenanceMode: false,
@@ -23,7 +23,7 @@ export default function AdminSettings() {
     setIsSaving(true);
     try {
       // Simulate save
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast.success("Settings saved successfully");
     } catch (error) {
       toast.error("Failed to save settings");
@@ -60,7 +60,7 @@ export default function AdminSettings() {
                 <Input
                   type="text"
                   value={settings.platformName}
-                  onChange={(e) =>
+                  onChange={e =>
                     setSettings({ ...settings, platformName: e.target.value })
                   }
                   className="w-full"
@@ -74,7 +74,7 @@ export default function AdminSettings() {
                 <Input
                   type="email"
                   value={settings.platformEmail}
-                  onChange={(e) =>
+                  onChange={e =>
                     setSettings({ ...settings, platformEmail: e.target.value })
                   }
                   className="w-full"
@@ -88,7 +88,7 @@ export default function AdminSettings() {
                 <Input
                   type="url"
                   value={settings.platformUrl}
-                  onChange={(e) =>
+                  onChange={e =>
                     setSettings({ ...settings, platformUrl: e.target.value })
                   }
                   className="w-full"
@@ -102,7 +102,7 @@ export default function AdminSettings() {
                 <Input
                   type="number"
                   value={settings.maxUploadSize}
-                  onChange={(e) =>
+                  onChange={e =>
                     setSettings({
                       ...settings,
                       maxUploadSize: parseInt(e.target.value),
@@ -129,7 +129,7 @@ export default function AdminSettings() {
                 </label>
                 <select
                   value={settings.certificateTemplate}
-                  onChange={(e) =>
+                  onChange={e =>
                     setSettings({
                       ...settings,
                       certificateTemplate: e.target.value,
@@ -146,7 +146,8 @@ export default function AdminSettings() {
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-sm text-blue-800">
-                  Certificates are automatically generated and sent to students upon course completion.
+                  Certificates are automatically generated and sent to students
+                  upon course completion.
                 </p>
               </div>
             </CardContent>
@@ -163,7 +164,9 @@ export default function AdminSettings() {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between p-3 border border-slate-200 rounded-lg">
                 <div>
-                  <p className="font-semibold text-slate-900">Email Notifications</p>
+                  <p className="font-semibold text-slate-900">
+                    Email Notifications
+                  </p>
                   <p className="text-sm text-slate-600">
                     Receive email alerts for important platform events
                   </p>
@@ -171,7 +174,7 @@ export default function AdminSettings() {
                 <input
                   type="checkbox"
                   checked={settings.emailNotifications}
-                  onChange={(e) =>
+                  onChange={e =>
                     setSettings({
                       ...settings,
                       emailNotifications: e.target.checked,
@@ -183,7 +186,9 @@ export default function AdminSettings() {
 
               <div className="flex items-center justify-between p-3 border border-slate-200 rounded-lg">
                 <div>
-                  <p className="font-semibold text-slate-900">Auto-Approve Instructors</p>
+                  <p className="font-semibold text-slate-900">
+                    Auto-Approve Instructors
+                  </p>
                   <p className="text-sm text-slate-600">
                     Automatically approve new instructor applications
                   </p>
@@ -191,7 +196,7 @@ export default function AdminSettings() {
                 <input
                   type="checkbox"
                   checked={settings.autoApproveInstructors}
-                  onChange={(e) =>
+                  onChange={e =>
                     setSettings({
                       ...settings,
                       autoApproveInstructors: e.target.checked,
@@ -214,7 +219,9 @@ export default function AdminSettings() {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between p-3 border border-slate-200 rounded-lg">
                 <div>
-                  <p className="font-semibold text-slate-900">Maintenance Mode</p>
+                  <p className="font-semibold text-slate-900">
+                    Maintenance Mode
+                  </p>
                   <p className="text-sm text-slate-600">
                     Temporarily disable access to the platform
                   </p>
@@ -222,7 +229,7 @@ export default function AdminSettings() {
                 <input
                   type="checkbox"
                   checked={settings.maintenanceMode}
-                  onChange={(e) =>
+                  onChange={e =>
                     setSettings({
                       ...settings,
                       maintenanceMode: e.target.checked,
@@ -235,7 +242,8 @@ export default function AdminSettings() {
               {settings.maintenanceMode && (
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <p className="text-sm text-yellow-800">
-                    ⚠️ Maintenance mode is enabled. Users will see a maintenance message.
+                    ⚠️ Maintenance mode is enabled. Users will see a maintenance
+                    message.
                   </p>
                 </div>
               )}

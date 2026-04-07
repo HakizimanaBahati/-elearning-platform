@@ -1,18 +1,20 @@
-# EduLearn - Comprehensive E-Learning Platform MVP
+# E-HUB - Comprehensive E-Learning Platform MVP
 
 ## Overview
 
-EduLearn is a production-ready, full-featured e-learning platform built with modern web technologies. It provides a complete ecosystem for students, instructors, and administrators to collaborate in online education.
+E-HUB is a production-ready, full-featured e-learning platform built with modern web technologies. It provides a complete ecosystem for students, instructors, and administrators to collaborate in online education.
 
 ## Key Features
 
 ### 1. User Authentication & Role-Based Access Control
+
 - **Three User Roles**: Students, Instructors, and Administrators
 - **Manus OAuth Integration**: Secure authentication with automatic session management
 - **Role-Based Navigation**: Dynamic UI based on user roles
 - **User Profile Management**: Edit profile, manage role preferences
 
 ### 2. Course Management System
+
 - **Course Catalog**: Browse, search, and filter courses by category, level, and price
 - **Course Creation**: Instructors can create and publish courses
 - **Course Publishing**: Control course visibility and availability
@@ -20,6 +22,7 @@ EduLearn is a production-ready, full-featured e-learning platform built with mod
 - **Course Detail Pages**: Comprehensive course information with curriculum overview
 
 ### 3. Video Lesson Player
+
 - **Video Playback**: Full-featured video player with playback controls
 - **Video Upload**: Instructors can upload videos to lessons
 - **Transcription Display**: Searchable transcriptions for accessibility and note-taking
@@ -27,12 +30,14 @@ EduLearn is a production-ready, full-featured e-learning platform built with mod
 - **Lesson Completion**: Mark lessons as complete to track progress
 
 ### 4. Student Dashboard
+
 - **Enrolled Courses**: View all enrolled courses with progress tracking
 - **Progress Visualization**: See completion percentage and lessons completed
 - **Course Recommendations**: Personalized course suggestions
 - **Quick Access**: Fast navigation to in-progress courses
 
 ### 5. Instructor Dashboard
+
 - **Course Management**: View and manage all created courses
 - **Student Analytics**: Track student progress and engagement
 - **Student List**: View all enrolled students with detailed progress
@@ -40,6 +45,7 @@ EduLearn is a production-ready, full-featured e-learning platform built with mod
 - **Revenue Tracking**: Monitor course earnings and payments
 
 ### 6. AI Chatbot Assistant
+
 - **Context-Aware Responses**: Understands course content and student context
 - **Personalized Learning Tips**: Provides suggestions based on student progress
 - **Chat History**: Maintains conversation history for reference
@@ -47,6 +53,7 @@ EduLearn is a production-ready, full-featured e-learning platform built with mod
 - **24/7 Availability**: Always available for student support
 
 ### 7. Certificate Management
+
 - **Automatic Generation**: Certificates automatically generated on course completion
 - **Custom Templates**: Multiple certificate designs with branding
 - **Download & Print**: Students can download certificates as images
@@ -54,6 +61,7 @@ EduLearn is a production-ready, full-featured e-learning platform built with mod
 - **Social Sharing**: Share certificates on social media
 
 ### 8. Payment Integration
+
 - **Mobile Money**: Support for mobile money payments
 - **Bank Transfer**: Direct bank transfer payment option
 - **Payment Tracking**: Admin panel for payment management
@@ -61,6 +69,7 @@ EduLearn is a production-ready, full-featured e-learning platform built with mod
 - **Transaction History**: Complete payment history for students
 
 ### 9. Admin Control Panel
+
 - **User Management**: View, edit, and deactivate users
 - **Course Moderation**: Approve/reject courses before publishing
 - **Payment Management**: Track all transactions and payments
@@ -69,6 +78,7 @@ EduLearn is a production-ready, full-featured e-learning platform built with mod
 - **System Health**: Monitor platform status and performance
 
 ### 10. Accessibility & Transcription
+
 - **Video Transcription**: Automatic transcription of video lessons
 - **Searchable Transcripts**: Find specific content within lessons
 - **Note Integration**: Link notes to specific transcript segments
@@ -77,6 +87,7 @@ EduLearn is a production-ready, full-featured e-learning platform built with mod
 ## Technology Stack
 
 ### Frontend
+
 - **React 19**: Modern UI framework with hooks
 - **TypeScript**: Type-safe development
 - **Tailwind CSS 4**: Utility-first styling
@@ -86,6 +97,7 @@ EduLearn is a production-ready, full-featured e-learning platform built with mod
 - **Wouter**: Lightweight routing
 
 ### Backend
+
 - **Express.js**: Web server framework
 - **tRPC**: Type-safe RPC framework
 - **Drizzle ORM**: Type-safe database queries
@@ -93,6 +105,7 @@ EduLearn is a production-ready, full-featured e-learning platform built with mod
 - **Node.js**: JavaScript runtime
 
 ### Infrastructure
+
 - **Vite**: Fast build tool and dev server
 - **Vitest**: Unit testing framework
 - **Manus OAuth**: Authentication provider
@@ -124,6 +137,7 @@ elearning-platform/
 ## Database Schema
 
 ### Core Tables
+
 - **users**: User accounts with roles (student, instructor, admin)
 - **courses**: Course information and metadata
 - **lessons**: Individual lessons within courses
@@ -137,6 +151,7 @@ elearning-platform/
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 22.13.0+
 - pnpm package manager
 - MySQL/TiDB database
@@ -144,6 +159,7 @@ elearning-platform/
 ### Installation
 
 1. **Install dependencies**:
+
    ```bash
    pnpm install
    ```
@@ -154,11 +170,13 @@ elearning-platform/
    - API keys for external services
 
 3. **Run database migrations**:
+
    ```bash
    pnpm db:push
    ```
 
 4. **Start development server**:
+
    ```bash
    pnpm dev
    ```
@@ -171,12 +189,14 @@ elearning-platform/
 ## Key Features Implementation Details
 
 ### Course Creation Flow
+
 1. Instructor navigates to "Create Course"
 2. Fills in course details (title, description, category, price)
 3. Adds lessons with video uploads
 4. Publishes course for students to enroll
 
 ### Student Learning Flow
+
 1. Student browses course catalog
 2. Enrolls in a course (free or paid)
 3. Accesses lessons in order
@@ -185,6 +205,7 @@ elearning-platform/
 6. Receives certificate on completion
 
 ### Payment & Certificate Flow
+
 1. Student enrolls in course
 2. Completes all lessons
 3. Initiates certificate purchase
@@ -194,6 +215,7 @@ elearning-platform/
 7. Student can download and share certificate
 
 ### AI Chatbot Interaction
+
 1. Student opens chatbot in lesson player
 2. Asks question about course content
 3. Chatbot analyzes course context
@@ -204,23 +226,27 @@ elearning-platform/
 ## API Routes
 
 ### Public Routes
+
 - `GET /` - Landing page
 - `GET /courses` - Course catalog
 - `GET /courses/:id` - Course detail
 
 ### Student Routes (Protected)
+
 - `GET /dashboard` - Student dashboard
 - `GET /certificates` - My certificates
 - `POST /enrollments` - Enroll in course
 - `POST /progress/mark-complete` - Mark lesson complete
 
 ### Instructor Routes (Protected)
+
 - `GET /instructor/dashboard` - Instructor dashboard
 - `POST /courses` - Create course
 - `PUT /courses/:id` - Edit course
 - `GET /instructor/courses/:id/students` - View enrolled students
 
 ### Admin Routes (Protected)
+
 - `GET /admin` - Admin dashboard
 - `GET /admin/users` - Manage users
 - `GET /admin/courses` - Moderate courses
@@ -230,6 +256,7 @@ elearning-platform/
 ## Testing
 
 The platform includes comprehensive vitest tests for:
+
 - Course management operations
 - Enrollment system
 - Progress tracking
@@ -240,6 +267,7 @@ The platform includes comprehensive vitest tests for:
 - Authentication flows
 
 Run tests with:
+
 ```bash
 pnpm test
 ```
@@ -264,6 +292,7 @@ pnpm test
 ## Deployment
 
 The platform is ready for deployment with:
+
 - Production build optimization
 - Environment-based configuration
 - Database migration support
@@ -275,6 +304,7 @@ Deploy to Manus platform using the built-in deployment tools.
 ## Future Enhancements
 
 Potential features for future versions:
+
 - Live streaming support
 - Discussion forums
 - Peer review system
@@ -288,6 +318,7 @@ Potential features for future versions:
 ## Support & Documentation
 
 For detailed documentation and support:
+
 - Check the README.md in the project root
 - Review code comments and inline documentation
 - Consult the database schema for data structure
