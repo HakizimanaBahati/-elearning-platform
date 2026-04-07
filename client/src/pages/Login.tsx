@@ -24,6 +24,23 @@ export default function Login() {
     redirectOnUnauthenticated: false,
   });
 
+  const loginMutation = trpc.auth.login.useMutation({
+    onSuccess: async user => {
+      toast.success("Successfully logged in");
+      await refresh();
+      if (user.role === "instructor") {
+        navigate("/instructor/dashboard");
+      } else if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
+    },
+    onError: error => {
+      toast.error(error.message || "Failed to login");
+    },
+  });
+
   const handleLogout = async () => {
     await logout();
     await refresh();
@@ -61,23 +78,6 @@ export default function Login() {
       </div>
     );
   }
-
-  const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: async user => {
-      toast.success("Successfully logged in");
-      await refresh();
-      if (user.role === "instructor") {
-        navigate("/instructor/dashboard");
-      } else if (user.role === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/dashboard");
-      }
-    },
-    onError: error => {
-      toast.error(error.message || "Failed to login");
-    },
-  });
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
