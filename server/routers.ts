@@ -85,6 +85,18 @@ export const appRouter = router({
 
         return user;
       }),
+
+    updateProfile: protectedProcedure
+      .input(
+        z.object({
+          name: z.string().min(2).optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        return await db.updateUser(ctx.user.id, {
+          name: input.name,
+        });
+      }),
   }),
 
   // ============ ADMIN ROUTES ============

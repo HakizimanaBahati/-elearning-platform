@@ -499,6 +499,21 @@ export async function updateUserRole(
   return { success: true };
 }
 
+export async function updateUser(userId: number, data: { name?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db
+    .update(users)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(users.id, userId));
+  const [updated] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  return updated;
+}
+
 export async function deleteUser(userId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");

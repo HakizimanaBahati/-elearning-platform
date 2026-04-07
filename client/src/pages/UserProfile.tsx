@@ -1,28 +1,45 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { User, Mail, Calendar, Shield, Edit2, Save, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export default function UserProfile() {
-  const { user, logout } = useAuth();
+  const { user, logout, refresh } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
   });
 
-  const handleSave = async () => {
-    try {
-      // TODO: Implement profile update mutation
+  const updateMutation = trpc.auth.updateProfile.useMutation({
+    onSuccess: async () => {
       toast.success("Profile updated successfully");
+      await refresh();
       setIsEditing(false);
-    } catch (error) {
-      toast.error("Failed to update profile");
-    }
+    },
+    onError: error => {
+      toast.error(error.message || "Failed to update profile");
+    },
+  });
+
+  const handleSave = () => {
+    updateMutation.mutate({ name: formData.name });
+  };
+
+  const handleCancel = () => {
+    setFormData({ name: user?.name || "", email: user?.email || "" });
+    setIsEditing(false);
   };
 
   const handleLogout = async () => {
@@ -39,7 +56,9 @@ export default function UserProfile() {
       <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex items-center justify-center">
         <Card className="max-w-md w-full mx-4">
           <CardContent className="pt-12 pb-12 text-center">
-            <p className="text-slate-600 mb-4">Please log in to view your profile</p>
+            <p className="text-slate-600 mb-4">
+              Please log in to view your profile
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -89,7 +108,7 @@ export default function UserProfile() {
                       <Input
                         type="text"
                         value={formData.name}
-                        onChange={(e) =>
+                        onChange={e =>
                           setFormData({ ...formData, name: e.target.value })
                         }
                         className="w-full"
@@ -103,7 +122,7 @@ export default function UserProfile() {
                       <Input
                         type="email"
                         value={formData.email}
-                        onChange={(e) =>
+                        onChange={e =>
                           setFormData({ ...formData, email: e.target.value })
                         }
                         className="w-full"
@@ -134,7 +153,9 @@ export default function UserProfile() {
                       <label className="block text-sm font-medium text-slate-600 mb-1">
                         Full Name
                       </label>
-                      <p className="text-lg font-semibold text-slate-900">{user.name}</p>
+                      <p className="text-lg font-semibold text-slate-900">
+                        {user.name}
+                      </p>
                     </div>
 
                     <div>
@@ -182,15 +203,15 @@ export default function UserProfile() {
                         user.role === "admin"
                           ? "bg-red-100 text-red-800"
                           : user.role === "instructor"
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-green-100 text-green-800"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-green-100 text-green-800"
                       }`}
                     >
                       {user.role === "admin"
                         ? "Administrator"
                         : user.role === "instructor"
-                        ? "Instructor"
-                        : "Student"}
+                          ? "Instructor"
+                          : "Student"}
                     </span>
                   </div>
                 </div>
@@ -200,8 +221,8 @@ export default function UserProfile() {
                     {user.role === "admin"
                       ? "You have full access to the platform including user management, course moderation, and analytics."
                       : user.role === "instructor"
-                      ? "You can create and manage courses, view student progress, and access instructor analytics."
-                      : "You can enroll in courses, track your progress, and earn certificates."}
+                        ? "You can create and manage courses, view student progress, and access instructor analytics."
+                        : "You can enroll in courses, track your progress, and earn certificates."}
                   </p>
 
                   {user.role === "user" && (
