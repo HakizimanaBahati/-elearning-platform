@@ -131,7 +131,9 @@ export default function AdminPayments() {
           <Card>
             <CardContent className="pt-6 text-center">
               <DollarSign className="w-8 h-8 mx-auto mb-2 text-green-600" />
-              <p className="text-3xl font-bold">${stats.revenue.toFixed(2)}</p>
+              <p className="text-3xl font-bold">
+                FRW {stats.revenue.toFixed(2)}
+              </p>
               <p className="text-sm text-slate-600">Revenue</p>
             </CardContent>
           </Card>
@@ -184,7 +186,7 @@ export default function AdminPayments() {
                       <TableCell>{p.studentId}</TableCell>
                       <TableCell>{p.courseId}</TableCell>
                       <TableCell>
-                        ${parseFloat(p.amount as string).toFixed(2)}
+                        FRW {parseFloat(p.amount as string).toFixed(2)}
                       </TableCell>
                       <TableCell>
                         <span className="bg-slate-100 px-2 py-1 rounded text-xs">

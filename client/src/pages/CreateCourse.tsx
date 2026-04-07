@@ -155,7 +155,7 @@ export default function CreateCourse() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-slate-900 mb-2">
-                    Price (USD) - Leave empty for free
+                    Price (FRW) - Leave empty for free
                   </label>
                   <Input
                     type="number"

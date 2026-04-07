@@ -12,22 +12,18 @@ export default function CourseDetail() {
   const { user } = useAuth();
 
   const courseId = parseInt(id || "0");
-  const { data: course, isLoading: courseLoading } = trpc.courses.getById.useQuery(
-    { id: courseId },
-    { enabled: !!courseId }
-  );
+  const { data: course, isLoading: courseLoading } =
+    trpc.courses.getById.useQuery({ id: courseId }, { enabled: !!courseId });
 
-  const { data: lessons = [], isLoading: lessonsLoading } = trpc.lessons.getByCourse.useQuery(
-    { courseId },
-    { enabled: !!courseId }
-  );
+  const { data: lessons = [], isLoading: lessonsLoading } =
+    trpc.lessons.getByCourse.useQuery({ courseId }, { enabled: !!courseId });
 
   const enrollMutation = trpc.enrollments.enroll.useMutation({
     onSuccess: () => {
       toast.success("Successfully enrolled in course!");
       navigate("/dashboard");
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to enroll");
     },
   });
@@ -44,7 +40,9 @@ export default function CourseDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-2xl font-bold text-slate-900 mb-4">Course not found</p>
+          <p className="text-2xl font-bold text-slate-900 mb-4">
+            Course not found
+          </p>
           <Button onClick={() => navigate("/courses")}>Back to Courses</Button>
         </div>
       </div>
@@ -138,11 +136,16 @@ export default function CourseDetail() {
                           {idx + 1}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-slate-900">{lesson.title}</h4>
-                          <p className="text-sm text-slate-600 line-clamp-2">{lesson.description}</p>
+                          <h4 className="font-semibold text-slate-900">
+                            {lesson.title}
+                          </h4>
+                          <p className="text-sm text-slate-600 line-clamp-2">
+                            {lesson.description}
+                          </p>
                           {lesson.duration && (
                             <p className="text-xs text-slate-500 mt-1">
-                              Duration: {Math.floor(lesson.duration / 60)} minutes
+                              Duration: {Math.floor(lesson.duration / 60)}{" "}
+                              minutes
                             </p>
                           )}
                         </div>
@@ -164,7 +167,7 @@ export default function CourseDetail() {
                     <div>
                       <p className="text-sm text-slate-600 mb-2">Price</p>
                       <p className="text-4xl font-bold text-indigo-600">
-                        ${parseFloat(course.price.toString()).toFixed(2)}
+                        FRW {parseFloat(course.price.toString()).toFixed(2)}
                       </p>
                     </div>
                   ) : (

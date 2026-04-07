@@ -107,7 +107,7 @@ export default function PaymentPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Mobile Money */}
             <Card
-              className={`cursor-pointer transition-all ${
+              className={`cursor-pointer transition-all FRW{
                 paymentMethod === "mobile"
                   ? "ring-2 ring-indigo-600 shadow-lg"
                   : "hover:shadow-md"
@@ -171,7 +171,7 @@ export default function PaymentPage() {
 
             {/* Bank Transfer */}
             <Card
-              className={`cursor-pointer transition-all ${
+              className={`cursor-pointer transition-all FRW{
                 paymentMethod === "bank"
                   ? "ring-2 ring-indigo-600 shadow-lg"
                   : "hover:shadow-md"
@@ -254,17 +254,17 @@ export default function PaymentPage() {
                   <div className="flex justify-between">
                     <span className="text-slate-600">Subtotal</span>
                     <span className="font-semibold">
-                      ${coursePrice.toFixed(2)}
+                      FRW {coursePrice.toFixed(2)}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-600">Tax (0%)</span>
-                    <span className="font-semibold">$0.00</span>
+                    <span className="font-semibold">FRW 0.00</span>
                   </div>
                   <div className="border-t pt-3 flex justify-between">
                     <span className="font-semibold text-slate-900">Total</span>
                     <span className="text-xl font-bold text-indigo-600">
-                      ${coursePrice.toFixed(2)}
+                      FRW {coursePrice.toFixed(2)}
                     </span>
                   </div>
                 </div>

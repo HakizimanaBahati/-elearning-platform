@@ -295,7 +295,7 @@ export default function EditCourse() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-slate-900 mb-2">
-                        Price (USD)
+                        Price (FRW)
                       </label>
                       <Input
                         type="number"

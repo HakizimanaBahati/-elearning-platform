@@ -195,7 +195,7 @@ export default function InstructorDashboard() {
                           {course.price &&
                             parseFloat(course.price.toString()) > 0 && (
                               <div className="font-semibold text-slate-900">
-                                $
+                                FRW{" "}
                                 {parseFloat(course.price.toString()).toFixed(2)}
                               </div>
                             )}

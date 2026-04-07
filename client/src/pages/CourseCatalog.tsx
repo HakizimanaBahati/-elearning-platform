@@ -173,7 +173,8 @@ export default function CourseCatalog() {
                         {course.price &&
                           parseFloat(course.price.toString()) > 0 && (
                             <span className="text-lg font-bold text-indigo-600">
-                              ${parseFloat(course.price.toString()).toFixed(2)}
+                              FRW{" "}
+                              {parseFloat(course.price.toString()).toFixed(2)}
                             </span>
                           )}
                       </div>
