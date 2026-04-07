@@ -16,6 +16,7 @@ import {
   ArrowRight,
   Play,
   LogOut,
+  User,
 } from "lucide-react";
 
 export default function Home() {
@@ -77,6 +78,7 @@ export default function Home() {
                     onClick={() => navigate("/profile")}
                     className="text-slate-600 hover:text-slate-900"
                   >
+                    <User className="w-4 h-4 mr-2" />
                     Profile
                   </Button>
                 )}
