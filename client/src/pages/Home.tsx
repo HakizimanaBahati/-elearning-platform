@@ -71,6 +71,15 @@ export default function Home() {
                 >
                   Dashboard
                 </Button>
+                {user && (
+                  <Button
+                    variant="ghost"
+                    onClick={() => navigate("/profile")}
+                    className="text-slate-600 hover:text-slate-900"
+                  >
+                    Profile
+                  </Button>
+                )}
                 {(user?.role === "instructor" || user?.role === "admin") && (
                   <Button
                     variant="ghost"
