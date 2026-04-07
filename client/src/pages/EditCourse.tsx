@@ -435,7 +435,10 @@ export default function EditCourse() {
                 </DialogContent>
               </Dialog>
 
-              <Dialog>
+              <Dialog
+                open={isLessonDialogOpen}
+                onOpenChange={setIsLessonDialogOpen}
+              >
                 <DialogTrigger asChild>
                   <Button
                     size="sm"
