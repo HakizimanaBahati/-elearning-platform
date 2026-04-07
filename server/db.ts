@@ -1,7 +1,26 @@
 import { eq, and, desc, asc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, courses, lessons, enrollments, progress, certificates, payments, chatMessages, InsertCourse, InsertLesson, InsertEnrollment, InsertProgress, InsertCertificate, InsertPayment, InsertChatMessage } from "../drizzle/schema";
-import { ENV } from './_core/env';
+import {
+  InsertUser,
+  users,
+  courses,
+  lessons,
+  modules,
+  enrollments,
+  progress,
+  certificates,
+  payments,
+  chatMessages,
+  InsertCourse,
+  InsertLesson,
+  InsertModule,
+  InsertEnrollment,
+  InsertProgress,
+  InsertCertificate,
+  InsertPayment,
+  InsertChatMessage,
+} from "../drizzle/schema";
+import { ENV } from "./_core/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -18,8 +37,6 @@ export async function getDb() {
   return _db;
 }
 
-
-
 export async function getUserByOpenId(openId: string) {
   const db = await getDb();
   if (!db) {
@@ -27,7 +44,11 @@ export async function getUserByOpenId(openId: string) {
     return undefined;
   }
 
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.openId, openId))
+    .limit(1);
 
   return result.length > 0 ? result[0] : undefined;
 }
@@ -42,7 +63,11 @@ export async function getUserById(id: number) {
 export async function getUserByEmail(email: string) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
@@ -50,7 +75,11 @@ export async function createUser(data: InsertUser) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.insert(users).values(data);
-  const result = await db.select().from(users).where(eq(users.email, data.email!)).limit(1);
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, data.email!))
+    .limit(1);
   return result[0];
 }
 
@@ -66,26 +95,41 @@ export async function createCourse(data: InsertCourse) {
 export async function getCourseById(id: number) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(courses).where(eq(courses.id, id)).limit(1);
+  const result = await db
+    .select()
+    .from(courses)
+    .where(eq(courses.id, id))
+    .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getCoursesByInstructor(instructorId: number) {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(courses).where(eq(courses.instructorId, instructorId)).orderBy(desc(courses.createdAt));
+  return await db
+    .select()
+    .from(courses)
+    .where(eq(courses.instructorId, instructorId))
+    .orderBy(desc(courses.createdAt));
 }
 
 export async function getPublishedCourses() {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(courses).where(eq(courses.isPublished, true)).orderBy(desc(courses.createdAt));
+  return await db
+    .select()
+    .from(courses)
+    .where(eq(courses.isPublished, true))
+    .orderBy(desc(courses.createdAt));
 }
 
 export async function updateCourse(id: number, data: Partial<InsertCourse>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return await db.update(courses).set({ ...data, updatedAt: new Date() }).where(eq(courses.id, id));
+  return await db
+    .update(courses)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(courses.id, id));
 }
 
 export async function deleteCourse(id: number) {
@@ -105,26 +149,85 @@ export async function createLesson(data: InsertLesson) {
 export async function getLessonById(id: number) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(lessons).where(eq(lessons.id, id)).limit(1);
+  const result = await db
+    .select()
+    .from(lessons)
+    .where(eq(lessons.id, id))
+    .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getLessonsByCourse(courseId: number) {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(lessons).where(eq(lessons.courseId, courseId)).orderBy(asc(lessons.order));
+  return await db
+    .select()
+    .from(lessons)
+    .where(eq(lessons.courseId, courseId))
+    .orderBy(asc(lessons.order));
 }
 
 export async function updateLesson(id: number, data: Partial<InsertLesson>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return await db.update(lessons).set({ ...data, updatedAt: new Date() }).where(eq(lessons.id, id));
+  return await db
+    .update(lessons)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(lessons.id, id));
 }
 
 export async function deleteLesson(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return await db.delete(lessons).where(eq(lessons.id, id));
+}
+
+// ============ MODULES ============
+
+export async function createModule(data: InsertModule) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return await db.insert(modules).values(data);
+}
+
+export async function getModuleById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db
+    .select()
+    .from(modules)
+    .where(eq(modules.id, id))
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getModulesByCourse(courseId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(modules)
+    .where(eq(modules.courseId, courseId))
+    .orderBy(asc(modules.order));
+}
+
+export async function updateModule(id: number, data: Partial<InsertModule>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return await db
+    .update(modules)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(modules.id, id));
+}
+
+export async function deleteModule(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db
+    .update(lessons)
+    .set({ moduleId: null })
+    .where(eq(lessons.moduleId, id));
+  return await db.delete(modules).where(eq(modules.id, id));
 }
 
 // ============ ENROLLMENTS ============
@@ -138,30 +241,56 @@ export async function enrollStudent(data: InsertEnrollment) {
 export async function getEnrollmentById(id: number) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(enrollments).where(eq(enrollments.id, id)).limit(1);
+  const result = await db
+    .select()
+    .from(enrollments)
+    .where(eq(enrollments.id, id))
+    .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getStudentEnrollments(studentId: number) {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(enrollments).where(eq(enrollments.studentId, studentId)).orderBy(desc(enrollments.enrolledAt));
+  return await db
+    .select()
+    .from(enrollments)
+    .where(eq(enrollments.studentId, studentId))
+    .orderBy(desc(enrollments.enrolledAt));
 }
 
 export async function getCourseEnrollments(courseId: number) {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(enrollments).where(eq(enrollments.courseId, courseId));
+  return await db
+    .select()
+    .from(enrollments)
+    .where(eq(enrollments.courseId, courseId));
 }
 
-export async function getStudentEnrollmentForCourse(studentId: number, courseId: number) {
+export async function getStudentEnrollmentForCourse(
+  studentId: number,
+  courseId: number
+) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(enrollments).where(and(eq(enrollments.studentId, studentId), eq(enrollments.courseId, courseId))).limit(1);
+  const result = await db
+    .select()
+    .from(enrollments)
+    .where(
+      and(
+        eq(enrollments.studentId, studentId),
+        eq(enrollments.courseId, courseId)
+      )
+    )
+    .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
-export async function updateEnrollment(id: number, data: Partial<InsertEnrollment>) {
+export async function updateEnrollment(
+  id: number,
+  data: Partial<InsertEnrollment>
+) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return await db.update(enrollments).set(data).where(eq(enrollments.id, id));
@@ -178,27 +307,52 @@ export async function recordProgress(data: InsertProgress) {
 export async function getProgressById(id: number) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(progress).where(eq(progress.id, id)).limit(1);
+  const result = await db
+    .select()
+    .from(progress)
+    .where(eq(progress.id, id))
+    .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getEnrollmentProgress(enrollmentId: number) {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(progress).where(eq(progress.enrollmentId, enrollmentId));
+  return await db
+    .select()
+    .from(progress)
+    .where(eq(progress.enrollmentId, enrollmentId));
 }
 
-export async function getLessonProgress(enrollmentId: number, lessonId: number) {
+export async function getLessonProgress(
+  enrollmentId: number,
+  lessonId: number
+) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(progress).where(and(eq(progress.enrollmentId, enrollmentId), eq(progress.lessonId, lessonId))).limit(1);
+  const result = await db
+    .select()
+    .from(progress)
+    .where(
+      and(
+        eq(progress.enrollmentId, enrollmentId),
+        eq(progress.lessonId, lessonId)
+      )
+    )
+    .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
-export async function updateProgress(id: number, data: Partial<InsertProgress>) {
+export async function updateProgress(
+  id: number,
+  data: Partial<InsertProgress>
+) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return await db.update(progress).set({ ...data, updatedAt: new Date() }).where(eq(progress.id, id));
+  return await db
+    .update(progress)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(progress.id, id));
 }
 
 // ============ CERTIFICATES ============
@@ -212,20 +366,31 @@ export async function createCertificate(data: InsertCertificate) {
 export async function getCertificateById(id: number) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(certificates).where(eq(certificates.id, id)).limit(1);
+  const result = await db
+    .select()
+    .from(certificates)
+    .where(eq(certificates.id, id))
+    .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getStudentCertificates(studentId: number) {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(certificates).where(eq(certificates.studentId, studentId));
+  return await db
+    .select()
+    .from(certificates)
+    .where(eq(certificates.studentId, studentId));
 }
 
 export async function getEnrollmentCertificate(enrollmentId: number) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(certificates).where(eq(certificates.enrollmentId, enrollmentId)).limit(1);
+  const result = await db
+    .select()
+    .from(certificates)
+    .where(eq(certificates.enrollmentId, enrollmentId))
+    .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
@@ -240,20 +405,48 @@ export async function createPayment(data: InsertPayment) {
 export async function getPaymentById(id: number) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(payments).where(eq(payments.id, id)).limit(1);
+  const result = await db
+    .select()
+    .from(payments)
+    .where(eq(payments.id, id))
+    .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getStudentPayments(studentId: number) {
   const db = await getDb();
   if (!db) return [];
-  return await db.select().from(payments).where(eq(payments.studentId, studentId));
+  return await db
+    .select()
+    .from(payments)
+    .where(eq(payments.studentId, studentId));
 }
 
 export async function updatePayment(id: number, data: Partial<InsertPayment>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return await db.update(payments).set({ ...data, updatedAt: new Date() }).where(eq(payments.id, id));
+  return await db
+    .update(payments)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(payments.id, id));
+}
+
+export async function getAllPayments() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(payments).orderBy(desc(payments.createdAt));
+}
+
+export async function updatePaymentStatus(
+  id: number,
+  status: "completed" | "pending" | "failed"
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return await db
+    .update(payments)
+    .set({ status, updatedAt: new Date() })
+    .where(eq(payments.id, id));
 }
 
 // ============ CHAT MESSAGES ============
@@ -267,7 +460,69 @@ export async function saveChatMessage(data: InsertChatMessage) {
 export async function getChatHistory(studentId: number, courseId?: number) {
   const db = await getDb();
   if (!db) return [];
-  const conditions = [eq(chatMessages.studentId, studentId)];
-  if (courseId) conditions.push(eq(chatMessages.courseId, courseId));
-  return await db.select().from(chatMessages).where(and(...conditions)).orderBy(asc(chatMessages.createdAt)).limit(50);
+  return courseId
+    ? await db
+        .select()
+        .from(chatMessages)
+        .where(
+          and(
+            eq(chatMessages.studentId, studentId),
+            eq(chatMessages.courseId, courseId)
+          )
+        )
+        .orderBy(desc(chatMessages.createdAt))
+    : await db
+        .select()
+        .from(chatMessages)
+        .where(eq(chatMessages.studentId, studentId))
+        .orderBy(desc(chatMessages.createdAt));
+}
+
+// ============ ADMIN FUNCTIONS ============
+
+export async function getAllUsers() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(users).orderBy(desc(users.createdAt));
+}
+
+export async function updateUserRole(
+  userId: number,
+  role: "user" | "instructor" | "admin"
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db
+    .update(users)
+    .set({ role, updatedAt: new Date() })
+    .where(eq(users.id, userId));
+  return { success: true };
+}
+
+export async function deleteUser(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(users).where(eq(users.id, userId));
+  return { success: true };
+}
+
+export async function getAllCoursesForAdmin() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(courses).orderBy(desc(courses.createdAt));
+}
+
+export async function getAllEnrollments() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(enrollments);
+}
+
+export async function getAllCertificates() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(certificates)
+    .orderBy(desc(certificates.issuedAt));
 }

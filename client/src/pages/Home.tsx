@@ -1,12 +1,31 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useLocation } from "wouter";
-import { BookOpen, Users, Award, Zap, ArrowRight, Play } from "lucide-react";
+import {
+  BookOpen,
+  Users,
+  Award,
+  Zap,
+  ArrowRight,
+  Play,
+  LogOut,
+} from "lucide-react";
 
 export default function Home() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const [, navigate] = useLocation();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
 
   const handleGetStarted = () => {
     if (isAuthenticated) {
@@ -61,6 +80,14 @@ export default function Home() {
                     Teach
                   </Button>
                 )}
+                <Button
+                  variant="ghost"
+                  onClick={handleLogout}
+                  className="text-slate-600 hover:text-slate-900"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </Button>
               </>
             ) : (
               <Button
@@ -84,7 +111,9 @@ export default function Home() {
                   Learn from the Best, Anytime, Anywhere
                 </h1>
                 <p className="text-xl text-slate-600">
-                  Unlock your potential with our comprehensive online learning platform. Access world-class courses, track your progress, and earn certificates.
+                  Unlock your potential with our comprehensive online learning
+                  platform. Access world-class courses, track your progress, and
+                  earn certificates.
                 </p>
               </div>
 
@@ -142,7 +171,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">Why Choose EduLearn?</h2>
-            <p className="text-xl text-slate-300">Everything you need to learn, teach, and succeed</p>
+            <p className="text-xl text-slate-300">
+              Everything you need to learn, teach, and succeed
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -150,30 +181,39 @@ export default function Home() {
               {
                 icon: BookOpen,
                 title: "Comprehensive Courses",
-                description: "Access thousands of courses across multiple categories and skill levels",
+                description:
+                  "Access thousands of courses across multiple categories and skill levels",
               },
               {
                 icon: Users,
                 title: "Expert Instructors",
-                description: "Learn from industry professionals and experienced educators",
+                description:
+                  "Learn from industry professionals and experienced educators",
               },
               {
                 icon: Award,
                 title: "Earn Certificates",
-                description: "Get recognized with professional certificates upon completion",
+                description:
+                  "Get recognized with professional certificates upon completion",
               },
               {
                 icon: Zap,
                 title: "Learn at Your Pace",
-                description: "Study whenever you want with lifetime access to course materials",
+                description:
+                  "Study whenever you want with lifetime access to course materials",
               },
             ].map((feature, idx) => {
               const Icon = feature.icon;
               return (
-                <Card key={idx} className="bg-slate-800 border-slate-700 hover:border-indigo-500 transition-colors">
+                <Card
+                  key={idx}
+                  className="bg-slate-800 border-slate-700 hover:border-indigo-500 transition-colors"
+                >
                   <CardHeader>
                     <Icon className="w-12 h-12 text-indigo-400 mb-4" />
-                    <CardTitle className="text-white">{feature.title}</CardTitle>
+                    <CardTitle className="text-white">
+                      {feature.title}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-slate-300">{feature.description}</p>
@@ -190,7 +230,8 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Start Learning?</h2>
           <p className="text-xl mb-8 text-indigo-100">
-            Join thousands of students already learning on EduLearn. Start your journey today!
+            Join thousands of students already learning on EduLearn. Start your
+            journey today!
           </p>
           <Button
             size="lg"
@@ -216,24 +257,56 @@ export default function Home() {
             <div>
               <h4 className="font-semibold text-white mb-4">Platform</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="/courses" className="hover:text-white transition">Courses</a></li>
-                <li><a href="#" className="hover:text-white transition">Instructors</a></li>
-                <li><a href="#" className="hover:text-white transition">Pricing</a></li>
+                <li>
+                  <a href="/courses" className="hover:text-white transition">
+                    Courses
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Instructors
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Pricing
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-white mb-4">Company</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white transition">About</a></li>
-                <li><a href="#" className="hover:text-white transition">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition">Contact</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Contact
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-white mb-4">Legal</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white transition">Privacy</a></li>
-                <li><a href="#" className="hover:text-white transition">Terms</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Privacy
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Terms
+                  </a>
+                </li>
               </ul>
             </div>
           </div>

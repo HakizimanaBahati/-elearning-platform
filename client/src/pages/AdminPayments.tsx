@@ -2,7 +2,21 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { CreditCard, Search, CheckCircle, Clock, XCircle, DollarSign } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  CreditCard,
+  Search,
+  CheckCircle,
+  Clock,
+  XCircle,
+  DollarSign,
+} from "lucide-react";
 import {
   Table,
   TableBody,
@@ -11,266 +25,223 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-interface Payment {
-  id: number;
-  studentName: string;
-  email: string;
-  amount: number;
-  method: "mobile_money" | "bank_transfer";
-  status: "completed" | "pending" | "failed";
-  courseTitle: string;
-  createdAt: string;
-  certificateIssued: boolean;
-}
-
-const mockPayments: Payment[] = [
-  {
-    id: 1,
-    studentName: "John Doe",
-    email: "john@example.com",
-    amount: 49.99,
-    method: "mobile_money",
-    status: "completed",
-    courseTitle: "Advanced Web Development",
-    createdAt: "2024-04-07",
-    certificateIssued: true,
-  },
-  {
-    id: 2,
-    studentName: "Jane Smith",
-    email: "jane@example.com",
-    amount: 39.99,
-    method: "bank_transfer",
-    status: "completed",
-    courseTitle: "Python for Data Science",
-    createdAt: "2024-04-06",
-    certificateIssued: true,
-  },
-  {
-    id: 3,
-    studentName: "Bob Johnson",
-    email: "bob@example.com",
-    amount: 29.99,
-    method: "mobile_money",
-    status: "pending",
-    courseTitle: "UI/UX Design Fundamentals",
-    createdAt: "2024-04-05",
-    certificateIssued: false,
-  },
-  {
-    id: 4,
-    studentName: "Alice Williams",
-    email: "alice@example.com",
-    amount: 59.99,
-    method: "bank_transfer",
-    status: "failed",
-    courseTitle: "Mobile App Development",
-    createdAt: "2024-04-04",
-    certificateIssued: false,
-  },
-];
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { useLocation } from "wouter";
+import { LogOut } from "lucide-react";
 
 export default function AdminPayments() {
+  const { logout } = useAuth();
+  const [, setLocation] = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState<"all" | "completed" | "pending" | "failed">("all");
+  const [filterStatus, setFilterStatus] = useState("all");
 
-  const filteredPayments = mockPayments.filter((payment) => {
-    const matchesSearch =
-      payment.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.courseTitle.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === "all" || payment.status === filterStatus;
-    return matchesSearch && matchesStatus;
+  const { data: payments = [], refetch } = trpc.admin.getAllPayments.useQuery();
+  const updateStatusMutation = trpc.admin.updatePaymentStatus.useMutation({
+    onSuccess: () => {
+      toast.success("Payment status updated");
+      refetch();
+    },
+    onError: e => {
+      toast.error(e.message);
+    },
+  });
+
+  const filtered = payments.filter(p => {
+    const match =
+      p.studentId.toString().includes(searchTerm) ||
+      p.courseId.toString().includes(searchTerm) ||
+      p.id.toString().includes(searchTerm);
+    return match && (filterStatus === "all" || p.status === filterStatus);
   });
 
   const stats = {
-    totalPayments: mockPayments.length,
-    completed: mockPayments.filter((p) => p.status === "completed").length,
-    pending: mockPayments.filter((p) => p.status === "pending").length,
-    totalRevenue: mockPayments
-      .filter((p) => p.status === "completed")
-      .reduce((sum, p) => sum + p.amount, 0),
+    total: payments.length,
+    completed: payments.filter(p => p.status === "completed").length,
+    pending: payments.filter(p => p.status === "pending").length,
+    failed: payments.filter(p => p.status === "failed").length,
+    revenue: payments
+      .filter(p => p.status === "completed")
+      .reduce((s, p) => s + (parseFloat(p.amount as string) || 0), 0),
+  };
+
+  const changeStatus = (id: number, status: string) => {
+    if (confirm(`Change status to ${status}?`)) {
+      updateStatusMutation.mutate({
+        paymentId: id,
+        status: status as "completed" | "pending" | "failed",
+      });
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    setLocation("/login");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      {/* Header */}
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-2">Payment Management</h1>
-          <p className="text-indigo-100">Track and manage certificate payments</p>
+        <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">Payment Management</h1>
+            <p className="text-indigo-100">Track and manage payments</p>
+          </div>
+          <Button
+            variant="outline"
+            className="bg-white text-indigo-600"
+            onClick={handleLogout}
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
         </div>
       </div>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <div className="grid grid-cols-5 gap-4 mb-8">
           <Card>
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <CreditCard className="w-8 h-8 text-indigo-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-slate-900">{stats.totalPayments}</p>
-                <p className="text-sm text-slate-600">Total Transactions</p>
-              </div>
+            <CardContent className="pt-6 text-center">
+              <CreditCard className="w-8 h-8 mx-auto mb-2 text-indigo-600" />
+              <p className="text-3xl font-bold">{stats.total}</p>
+              <p className="text-sm text-slate-600">Total</p>
             </CardContent>
           </Card>
-
           <Card>
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-slate-900">{stats.completed}</p>
-                <p className="text-sm text-slate-600">Completed</p>
-              </div>
+            <CardContent className="pt-6 text-center">
+              <CheckCircle className="w-8 h-8 mx-auto mb-2 text-green-600" />
+              <p className="text-3xl font-bold">{stats.completed}</p>
+              <p className="text-sm text-slate-600">Completed</p>
             </CardContent>
           </Card>
-
           <Card>
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <Clock className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-slate-900">{stats.pending}</p>
-                <p className="text-sm text-slate-600">Pending</p>
-              </div>
+            <CardContent className="pt-6 text-center">
+              <Clock className="w-8 h-8 mx-auto mb-2 text-yellow-600" />
+              <p className="text-3xl font-bold">{stats.pending}</p>
+              <p className="text-sm text-slate-600">Pending</p>
             </CardContent>
           </Card>
-
           <Card>
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <DollarSign className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-slate-900">${stats.totalRevenue.toFixed(2)}</p>
-                <p className="text-sm text-slate-600">Total Revenue</p>
-              </div>
+            <CardContent className="pt-6 text-center">
+              <XCircle className="w-8 h-8 mx-auto mb-2 text-red-600" />
+              <p className="text-3xl font-bold">{stats.failed}</p>
+              <p className="text-sm text-slate-600">Failed</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6 text-center">
+              <DollarSign className="w-8 h-8 mx-auto mb-2 text-green-600" />
+              <p className="text-3xl font-bold">${stats.revenue.toFixed(2)}</p>
+              <p className="text-sm text-slate-600">Revenue</p>
             </CardContent>
           </Card>
         </div>
-
-        {/* Payments Table */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-indigo-600" />
-                Payments
-              </span>
+            <CardTitle className="flex justify-between items-center">
+              <span>All Payments ({filtered.length})</span>
               <div className="flex gap-2">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-                  <Input
-                    placeholder="Search payments..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 w-64"
-                  />
-                </div>
-                <select
-                  value={filterStatus}
-                  onChange={(e) =>
-                    setFilterStatus(e.target.value as typeof filterStatus)
-                  }
-                  className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 text-sm"
-                >
-                  <option value="all">All Status</option>
-                  <option value="completed">Completed</option>
-                  <option value="pending">Pending</option>
-                  <option value="failed">Failed</option>
-                </select>
+                <Input
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                  className="w-48"
+                />
+                <Select value={filterStatus} onValueChange={setFilterStatus}>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="failed">Failed</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Student</TableHead>
-                    <TableHead>Course</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Method</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Certificate</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredPayments.map((payment) => (
-                    <TableRow key={payment.id}>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>ID</TableHead>
+                  <TableHead>Student</TableHead>
+                  <TableHead>Course</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Method</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.map(p => {
+                  const st = p.status || "pending";
+                  return (
+                    <TableRow key={p.id}>
+                      <TableCell>#{p.id}</TableCell>
+                      <TableCell>{p.studentId}</TableCell>
+                      <TableCell>{p.courseId}</TableCell>
                       <TableCell>
-                        <div>
-                          <p className="font-semibold text-slate-900">
-                            {payment.studentName}
-                          </p>
-                          <p className="text-xs text-slate-500">{payment.email}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-slate-600">
-                        {payment.courseTitle}
-                      </TableCell>
-                      <TableCell className="font-semibold text-slate-900">
-                        ${payment.amount.toFixed(2)}
+                        ${parseFloat(p.amount as string).toFixed(2)}
                       </TableCell>
                       <TableCell>
-                        <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-1 rounded">
-                          {payment.method === "mobile_money"
-                            ? "Mobile Money"
-                            : "Bank Transfer"}
+                        <span className="bg-slate-100 px-2 py-1 rounded text-xs">
+                          {p.paymentMethod === "mobile_money"
+                            ? "Mobile"
+                            : "Bank"}
                         </span>
                       </TableCell>
                       <TableCell>
                         <span
-                          className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
-                            payment.status === "completed"
-                              ? "bg-green-100 text-green-800"
-                              : payment.status === "pending"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${st === "completed" ? "bg-green-100 text-green-800" : st === "pending" ? "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800"}`}
                         >
-                          {payment.status === "completed" && (
-                            <CheckCircle className="w-3 h-3" />
-                          )}
-                          {payment.status === "pending" && (
-                            <Clock className="w-3 h-3" />
-                          )}
-                          {payment.status === "failed" && (
-                            <XCircle className="w-3 h-3" />
-                          )}
-                          {payment.status.charAt(0).toUpperCase() +
-                            payment.status.slice(1)}
+                          {st}
                         </span>
                       </TableCell>
                       <TableCell>
-                        {payment.certificateIssued ? (
-                          <span className="text-xs font-semibold text-green-700 bg-green-50 px-2 py-1 rounded">
-                            ✓ Issued
-                          </span>
-                        ) : (
-                          <span className="text-xs font-semibold text-slate-500 bg-slate-50 px-2 py-1 rounded">
-                            Pending
-                          </span>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-slate-600">
-                        {new Date(payment.createdAt).toLocaleDateString()}
+                        {new Date(p.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="sm" className="text-indigo-600">
-                          View
-                        </Button>
+                        <div className="flex gap-1">
+                          {st !== "completed" && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => changeStatus(p.id, "completed")}
+                            >
+                              <CheckCircle className="w-4 h-4 text-green-600" />
+                            </Button>
+                          )}
+                          {st !== "pending" && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => changeStatus(p.id, "pending")}
+                            >
+                              <Clock className="w-4 h-4 text-yellow-600" />
+                            </Button>
+                          )}
+                          {st !== "failed" && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => changeStatus(p.id, "failed")}
+                            >
+                              <XCircle className="w-4 h-4 text-red-600" />
+                            </Button>
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-
-            {filteredPayments.length === 0 && (
-              <div className="text-center py-8">
-                <CreditCard className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-600">No payments found</p>
+                  );
+                })}
+              </TableBody>
+            </Table>
+            {filtered.length === 0 && (
+              <div className="text-center py-8 text-slate-500">
+                No payments found
               </div>
             )}
           </CardContent>

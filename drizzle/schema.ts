@@ -1,4 +1,15 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, boolean, longtext, json } from "drizzle-orm/mysql-core";
+import {
+  int,
+  mysqlEnum,
+  mysqlTable,
+  text,
+  timestamp,
+  varchar,
+  decimal,
+  boolean,
+  longtext,
+  json,
+} from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 
 /**
@@ -18,7 +29,9 @@ export const users = mysqlTable("users", {
   email: varchar("email", { length: 320 }).notNull().unique(),
   password: varchar("password", { length: 255 }).notNull(),
   loginMethod: varchar("loginMethod", { length: 64 }),
-  role: mysqlEnum("role", ["user", "instructor", "admin"]).default("user").notNull(),
+  role: mysqlEnum("role", ["user", "instructor", "admin"])
+    .default("user")
+    .notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
@@ -36,7 +49,9 @@ export const courses = mysqlTable("courses", {
   title: varchar("title", { length: 255 }).notNull(),
   description: longtext("description"),
   category: varchar("category", { length: 100 }),
-  level: mysqlEnum("level", ["beginner", "intermediate", "advanced"]).default("beginner"),
+  level: mysqlEnum("level", ["beginner", "intermediate", "advanced"]).default(
+    "beginner"
+  ),
   thumbnail: text("thumbnail"), // CDN URL
   price: decimal("price", { precision: 10, scale: 2 }).default("0"),
   requiresCertificate: boolean("requiresCertificate").default(true),
@@ -54,11 +69,14 @@ export type InsertCourse = typeof courses.$inferInsert;
 export const lessons = mysqlTable("lessons", {
   id: int("id").autoincrement().primaryKey(),
   courseId: int("courseId").notNull(),
+  moduleId: int("moduleId"),
   title: varchar("title", { length: 255 }).notNull(),
   description: longtext("description"),
-  videoUrl: text("videoUrl"), // CDN URL
-  videoKey: varchar("videoKey", { length: 255 }), // S3 key for reference
-  duration: int("duration"), // in seconds
+  lessonType: mysqlEnum("lessonType", ["video", "document"]).default("video"),
+  videoUrl: text("videoUrl"),
+  videoKey: varchar("videoKey", { length: 255 }),
+  content: longtext("content"),
+  duration: int("duration"),
   transcription: longtext("transcription"),
   order: int("order").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -67,6 +85,22 @@ export const lessons = mysqlTable("lessons", {
 
 export type Lesson = typeof lessons.$inferSelect;
 export type InsertLesson = typeof lessons.$inferInsert;
+
+/**
+ * Modules table - organizes lessons into modules/topics within courses
+ */
+export const modules = mysqlTable("modules", {
+  id: int("id").autoincrement().primaryKey(),
+  courseId: int("courseId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: longtext("description"),
+  order: int("order").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Module = typeof modules.$inferSelect;
+export type InsertModule = typeof modules.$inferInsert;
 
 /**
  * Enrollments table - tracks student enrollment in courses
@@ -125,8 +159,16 @@ export const payments = mysqlTable("payments", {
   studentId: int("studentId").notNull(),
   courseId: int("courseId").notNull(),
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
-  paymentMethod: mysqlEnum("paymentMethod", ["mobile_money", "bank_transfer"]).notNull(),
-  status: mysqlEnum("status", ["pending", "completed", "failed", "refunded"]).default("pending"),
+  paymentMethod: mysqlEnum("paymentMethod", [
+    "mobile_money",
+    "bank_transfer",
+  ]).notNull(),
+  status: mysqlEnum("status", [
+    "pending",
+    "completed",
+    "failed",
+    "refunded",
+  ]).default("pending"),
   transactionId: varchar("transactionId", { length: 255 }),
   metadata: json("metadata"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

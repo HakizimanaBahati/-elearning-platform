@@ -23,6 +23,7 @@ import AdminUsers from "./pages/AdminUsers";
 import AdminCourseModeration from "./pages/AdminCourseModeration";
 import AdminPayments from "./pages/AdminPayments";
 import AdminSettings from "./pages/AdminSettings";
+import AdminCertificates from "./pages/AdminCertificates";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function Router() {
@@ -45,37 +46,29 @@ function Router() {
       <Route path={"/courses/:id"} component={CourseDetail} />
       <Route path={"/lessons/:id"} component={LessonPlayer} />
       <Route path={"/payment/:courseId"} component={PaymentPage} />
-      
-      {/* Student Routes */}
-      {user && (user.role === "user" || user.role === "admin") && (
-        <>
-          <Route path={"/dashboard"} component={StudentDashboard} />
-          <Route path={"/certificates"} component={MyCertificates} />
-          <Route path={"/profile"} component={UserProfile} />
-        </>
-      )}
 
-      {/* Instructor Routes */}
-      {user && (user.role === "instructor" || user.role === "admin") && (
-        <>
-          <Route path={"/instructor/dashboard"} component={InstructorDashboard} />
-          <Route path={"/instructor/courses/create"} component={CreateCourse} />
-          <Route path={"/instructor/courses/:id/edit"} component={EditCourse} />
-          <Route path={"/instructor/courses/:courseId/students"} component={InstructorStudents} />
-        </>
-      )}
+      {/* Student Routes - always registered */}
+      <Route path={"/dashboard"} component={StudentDashboard} />
+      <Route path={"/certificates"} component={MyCertificates} />
+      <Route path={"/profile"} component={UserProfile} />
 
-      {/* Admin Routes */}
-      {user && user.role === "admin" && (
-        <>
-          <Route path={"/admin"} component={AdminDashboard} />
-          <Route path={"/admin/users"} component={AdminUsers} />
-          <Route path={"/admin/courses"} component={AdminCourseModeration} />
-          <Route path={"/admin/payments"} component={AdminPayments} />
-          <Route path={"/admin/settings"} component={AdminSettings} />
-          <Route path={"/profile"} component={UserProfile} />
-        </>
-      )}
+      {/* Instructor Routes - always registered */}
+      <Route path={"/instructor/dashboard"} component={InstructorDashboard} />
+      <Route path={"/instructor/courses/create"} component={CreateCourse} />
+      <Route path={"/instructor/courses/:id/edit"} component={EditCourse} />
+      <Route
+        path={"/instructor/courses/:courseId/students"}
+        component={InstructorStudents}
+      />
+
+      {/* Admin Routes - always registered */}
+      <Route path={"/admin"} component={AdminDashboard} />
+      <Route path={"/admin/dashboard"} component={AdminDashboard} />
+      <Route path={"/admin/users"} component={AdminUsers} />
+      <Route path={"/admin/courses"} component={AdminCourseModeration} />
+      <Route path={"/admin/payments"} component={AdminPayments} />
+      <Route path={"/admin/certificates"} component={AdminCertificates} />
+      <Route path={"/admin/settings"} component={AdminSettings} />
 
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

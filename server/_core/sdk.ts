@@ -155,7 +155,13 @@ class SDKServer {
   }
 
   private getSessionSecret() {
-    const secret = ENV.cookieSecret;
+    const secret =
+      ENV.cookieSecret || "fallback-secret-key-for-development-only";
+    if (secret.length === 0) {
+      console.warn(
+        "[Auth] Using fallback secret - JWT_SECRET not set in environment"
+      );
+    }
     return new TextEncoder().encode(secret);
   }
 
@@ -212,19 +218,15 @@ class SDKServer {
       });
       const { openId, appId, name } = payload as Record<string, unknown>;
 
-      if (
-        !isNonEmptyString(openId) ||
-        !isNonEmptyString(appId) ||
-        !isNonEmptyString(name)
-      ) {
-        console.warn("[Auth] Session payload missing required fields");
+      if (!isNonEmptyString(openId)) {
+        console.warn("[Auth] Session payload missing openId");
         return null;
       }
 
       return {
         openId,
-        appId,
-        name,
+        appId: isNonEmptyString(appId) ? appId : "unknown",
+        name: isNonEmptyString(name) ? name : "unknown",
       };
     } catch (error) {
       console.warn("[Auth] Session verification failed", String(error));

@@ -1,37 +1,71 @@
 import { useEffect, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useLocation } from "wouter";
-import { BookOpen, Star, Users, Clock, Search } from "lucide-react";
+import { BookOpen, Star, Users, Clock, Search, LogOut } from "lucide-react";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 export default function CourseCatalog() {
   const [, navigate] = useLocation();
+  const { user, logout, isAuthenticated } = useAuth({
+    redirectOnUnauthenticated: false,
+  });
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
 
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
+
   const { data: courses = [], isLoading } = trpc.courses.list.useQuery();
 
-  const filteredCourses = courses.filter((course) => {
-    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (course.description?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
-    const matchesCategory = !selectedCategory || course.category === selectedCategory;
+  const filteredCourses = courses.filter(course => {
+    const matchesSearch =
+      course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (course.description?.toLowerCase().includes(searchTerm.toLowerCase()) ??
+        false);
+    const matchesCategory =
+      !selectedCategory || course.category === selectedCategory;
     const matchesLevel = !selectedLevel || course.level === selectedLevel;
     return matchesSearch && matchesCategory && matchesLevel;
   });
 
-  const categories = Array.from(new Set(courses.map((c) => c.category).filter(Boolean)));
+  const categories = Array.from(
+    new Set(courses.map(c => c.category).filter(Boolean))
+  );
   const levels = ["beginner", "intermediate", "advanced"];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Header */}
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-4">Explore Courses</h1>
-          <p className="text-indigo-100 text-lg">Discover thousands of courses to advance your skills</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-4xl font-bold mb-4">Explore Courses</h1>
+            <p className="text-indigo-100 text-lg">
+              Discover thousands of courses to advance your skills
+            </p>
+          </div>
+          {isAuthenticated && (
+            <Button
+              variant="outline"
+              className="bg-white text-indigo-600 hover:bg-slate-100"
+              onClick={handleLogout}
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          )}
         </div>
       </div>
 
@@ -47,7 +81,7 @@ export default function CourseCatalog() {
                   <Input
                     placeholder="Search courses..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={e => setSearchTerm(e.target.value)}
                     className="pl-10"
                   />
                 </div>
@@ -63,10 +97,12 @@ export default function CourseCatalog() {
                   >
                     All Categories
                   </Button>
-                  {categories.map((category) => (
+                  {categories.map(category => (
                     <Button
                       key={category}
-                      variant={selectedCategory === category ? "default" : "outline"}
+                      variant={
+                        selectedCategory === category ? "default" : "outline"
+                      }
                       onClick={() => setSelectedCategory(category)}
                       className="w-full justify-start"
                     >
@@ -86,7 +122,7 @@ export default function CourseCatalog() {
                   >
                     All Levels
                   </Button>
-                  {levels.map((level) => (
+                  {levels.map(level => (
                     <Button
                       key={level}
                       variant={selectedLevel === level ? "default" : "outline"}
@@ -114,7 +150,7 @@ export default function CourseCatalog() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredCourses.map((course) => (
+                {filteredCourses.map(course => (
                   <Card
                     key={course.id}
                     className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
@@ -134,13 +170,16 @@ export default function CourseCatalog() {
                         <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full capitalize">
                           {course.level}
                         </span>
-                        {course.price && parseFloat(course.price.toString()) > 0 && (
-                          <span className="text-lg font-bold text-indigo-600">
-                            ${parseFloat(course.price.toString()).toFixed(2)}
-                          </span>
-                        )}
+                        {course.price &&
+                          parseFloat(course.price.toString()) > 0 && (
+                            <span className="text-lg font-bold text-indigo-600">
+                              ${parseFloat(course.price.toString()).toFixed(2)}
+                            </span>
+                          )}
                       </div>
-                      <CardTitle className="line-clamp-2">{course.title}</CardTitle>
+                      <CardTitle className="line-clamp-2">
+                        {course.title}
+                      </CardTitle>
                       <CardDescription className="line-clamp-2">
                         {course.description}
                       </CardDescription>
@@ -158,7 +197,7 @@ export default function CourseCatalog() {
                       </div>
                       <Button
                         className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           navigate(`/courses/${course.id}`);
                         }}
