@@ -178,6 +178,71 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* For Students */}
+            <Card className="hover:shadow-lg transition-shadow overflow-hidden">
+              <div className="aspect-video">
+                <iframe
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  title="For Students Tutorial"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+              <CardContent className="pt-4">
+                <h3 className="font-semibold text-lg mb-2">For Students</h3>
+                <p className="text-slate-600 text-sm">
+                  Learn how to register, browse courses, enroll, and track your
+                  progress.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* For Instructors */}
+            <Card className="hover:shadow-lg transition-shadow overflow-hidden">
+              <div className="aspect-video">
+                <iframe
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  title="For Instructors Tutorial"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+              <CardContent className="pt-4">
+                <h3 className="font-semibold text-lg mb-2">For Instructors</h3>
+                <p className="text-slate-600 text-sm">
+                  Learn how to create courses, add modules, lessons, and manage
+                  students.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* For Admins */}
+            <Card className="hover:shadow-lg transition-shadow overflow-hidden">
+              <div className="aspect-video">
+                <iframe
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  title="For Admins Tutorial"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+              <CardContent className="pt-4">
+                <h3 className="font-semibold text-lg mb-2">For Admins</h3>
+                <p className="text-slate-600 text-sm">
+                  Learn how to manage users, courses, payments, enrollments, and
+                  certificates.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* For Students */}
             <Card className="hover:shadow-lg transition-shadow">
               <div className="aspect-video bg-gradient-to-br from-indigo-500 to-purple-600 rounded-t-lg flex items-center justify-center relative overflow-hidden group cursor-pointer">
                 <Play className="w-16 h-16 text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all" />
