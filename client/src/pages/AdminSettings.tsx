@@ -38,7 +38,7 @@ export default function AdminSettings() {
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-2">Platform Settings</h1>
-          <p className="text-indigo-100">Configure your e-learning platform</p>
+          <p className="text-indigo-100">Configure your E-HUB platform</p>
         </div>
       </div>
 
