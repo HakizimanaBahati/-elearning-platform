@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { LogOut } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -34,6 +36,7 @@ import {
 export default function EditCourse() {
   const { id } = useParams<{ id: string }>();
   const [, navigate] = useLocation();
+  const { logout } = useAuth();
   const courseId = parseInt(id || "0");
 
   const [formData, setFormData] = useState({
@@ -184,13 +187,26 @@ export default function EditCourse() {
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Button
-            variant="ghost"
-            onClick={() => navigate("/instructor/dashboard")}
-            className="text-white hover:bg-white/20 mb-6"
-          >
-            ← Back to Dashboard
-          </Button>
+          <div className="flex items-center justify-between mb-6">
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/instructor/dashboard")}
+              className="text-white hover:bg-white/20"
+            >
+              ← Back to Dashboard
+            </Button>
+            <Button
+              variant="outline"
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+              onClick={() => {
+                logout();
+                navigate("/");
+              }}
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </div>
           <h1 className="text-4xl font-bold mb-2">Edit Course</h1>
           <p className="text-indigo-100">{course.title}</p>
         </div>

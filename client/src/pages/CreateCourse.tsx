@@ -5,11 +5,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { LogOut } from "lucide-react";
 import { toast } from "sonner";
 
 export default function CreateCourse() {
   const [, navigate] = useLocation();
+  const { logout } = useAuth();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -24,7 +33,7 @@ export default function CreateCourse() {
       toast.success("Course created successfully!");
       navigate("/instructor/dashboard");
     },
-    onError: (error) => {
+    onError: error => {
       toast.error(error.message || "Failed to create course");
     },
   });
@@ -43,8 +52,25 @@ export default function CreateCourse() {
       {/* Header */}
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-2">Create New Course</h1>
-          <p className="text-indigo-100">Share your knowledge with students worldwide</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold mb-2">Create New Course</h1>
+              <p className="text-indigo-100">
+                Share your knowledge with students worldwide
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+              onClick={() => {
+                logout();
+                navigate("/");
+              }}
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -64,7 +90,9 @@ export default function CreateCourse() {
                   type="text"
                   placeholder="e.g., Introduction to Web Development"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={e =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   className="w-full"
                   required
                 />
@@ -78,7 +106,9 @@ export default function CreateCourse() {
                 <Textarea
                   placeholder="Describe your course, what students will learn, and prerequisites..."
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={e =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   className="w-full h-32"
                 />
               </div>
@@ -93,7 +123,9 @@ export default function CreateCourse() {
                     type="text"
                     placeholder="e.g., Technology, Business, Art"
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    onChange={e =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
                   />
                 </div>
 
@@ -101,7 +133,12 @@ export default function CreateCourse() {
                   <label className="block text-sm font-semibold text-slate-900 mb-2">
                     Level
                   </label>
-                  <Select value={formData.level} onValueChange={(value: any) => setFormData({ ...formData, level: value })}>
+                  <Select
+                    value={formData.level}
+                    onValueChange={(value: any) =>
+                      setFormData({ ...formData, level: value })
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -126,7 +163,9 @@ export default function CreateCourse() {
                     step="0.01"
                     min="0"
                     value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    onChange={e =>
+                      setFormData({ ...formData, price: e.target.value })
+                    }
                   />
                 </div>
 
@@ -138,7 +177,9 @@ export default function CreateCourse() {
                     type="url"
                     placeholder="https://example.com/image.jpg"
                     value={formData.thumbnail}
-                    onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
+                    onChange={e =>
+                      setFormData({ ...formData, thumbnail: e.target.value })
+                    }
                   />
                 </div>
               </div>
@@ -167,13 +208,26 @@ export default function CreateCourse() {
         {/* Info Box */}
         <Card className="mt-8 bg-blue-50 border-blue-200">
           <CardContent className="pt-6">
-            <h3 className="font-semibold text-blue-900 mb-2">💡 Tips for Creating a Great Course</h3>
+            <h3 className="font-semibold text-blue-900 mb-2">
+              💡 Tips for Creating a Great Course
+            </h3>
             <ul className="text-sm text-blue-800 space-y-1">
-              <li>• Use a clear, descriptive title that reflects the course content</li>
-              <li>• Write a detailed description to help students understand what they'll learn</li>
-              <li>• Choose an appropriate difficulty level for your target audience</li>
+              <li>
+                • Use a clear, descriptive title that reflects the course
+                content
+              </li>
+              <li>
+                • Write a detailed description to help students understand what
+                they'll learn
+              </li>
+              <li>
+                • Choose an appropriate difficulty level for your target
+                audience
+              </li>
               <li>• Add a professional thumbnail image to attract students</li>
-              <li>• You can add lessons and content after creating the course</li>
+              <li>
+                • You can add lessons and content after creating the course
+              </li>
             </ul>
           </CardContent>
         </Card>
