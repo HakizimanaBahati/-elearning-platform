@@ -566,18 +566,58 @@ export const appRouter = router({
         z.object({
           courseId: z.number(),
           amount: z.string(),
-          paymentMethod: z.enum(["mobile_money", "bank_transfer"]),
+          paymentMethod: z.enum([
+            "mtn_mobile_money",
+            "airtel_money",
+            "equity_bank",
+          ]),
+          paymentType: z.enum(["course", "certificate"]).default("course"),
         })
       )
       .mutation(async ({ ctx, input }) => {
         const course = await db.getCourseById(input.courseId);
         if (!course) throw new TRPCError({ code: "NOT_FOUND" });
 
+        if (input.paymentType === "certificate") {
+          const enrollment = await db.getStudentEnrollmentForCourse(
+            ctx.user.id,
+            input.courseId
+          );
+          if (!enrollment)
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Not enrolled in this course",
+            });
+
+          const lessons = await db.getLessonsByCourse(input.courseId);
+          const allProgress = await db.getEnrollmentProgress(enrollment.id);
+          const completedLessons = allProgress.filter(p => p.completedAt);
+
+          if (
+            lessons.length === 0 ||
+            completedLessons.length < lessons.length
+          ) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message:
+                "You must complete all lessons before paying for certificate",
+            });
+          }
+
+          if (!course.requiresCertificate) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "This course does not require certificate payment",
+            });
+          }
+        }
+
         return await db.createPayment({
           studentId: ctx.user.id,
           courseId: input.courseId,
           amount: parseFloat(input.amount).toString(),
           paymentMethod: input.paymentMethod,
+          paymentType: input.paymentType,
           status: "pending",
         });
       }),

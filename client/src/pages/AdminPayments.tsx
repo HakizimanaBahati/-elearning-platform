@@ -190,9 +190,11 @@ export default function AdminPayments() {
                       </TableCell>
                       <TableCell>
                         <span className="bg-slate-100 px-2 py-1 rounded text-xs">
-                          {p.paymentMethod === "mobile_money"
-                            ? "Mobile"
-                            : "Bank"}
+                          {p.paymentMethod === "mtn_mobile_money"
+                            ? "MTN Mobile"
+                            : p.paymentMethod === "airtel_money"
+                              ? "Airtel Money"
+                              : "Equity Bank"}
                         </span>
                       </TableCell>
                       <TableCell>

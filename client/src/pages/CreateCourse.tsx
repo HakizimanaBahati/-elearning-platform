@@ -25,6 +25,7 @@ export default function CreateCourse() {
     category: "",
     level: "beginner" as const,
     price: "",
+    certificatePrice: "",
     thumbnail: "",
   });
 
@@ -165,6 +166,25 @@ export default function CreateCourse() {
                     value={formData.price}
                     onChange={e =>
                       setFormData({ ...formData, price: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-900 mb-2">
+                    Certificate Price (FRW) - Leave empty for free
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="0.00"
+                    step="0.01"
+                    min="0"
+                    value={formData.certificatePrice}
+                    onChange={e =>
+                      setFormData({
+                        ...formData,
+                        certificatePrice: e.target.value,
+                      })
                     }
                   />
                 </div>

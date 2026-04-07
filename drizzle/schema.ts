@@ -55,6 +55,10 @@ export const courses = mysqlTable("courses", {
   thumbnail: text("thumbnail"), // CDN URL
   price: decimal("price", { precision: 10, scale: 2 }).default("0"),
   requiresCertificate: boolean("requiresCertificate").default(true),
+  certificatePrice: decimal("certificatePrice", {
+    precision: 10,
+    scale: 2,
+  }).default("0"),
   isPublished: boolean("isPublished").default(false),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -160,9 +164,13 @@ export const payments = mysqlTable("payments", {
   courseId: int("courseId").notNull(),
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
   paymentMethod: mysqlEnum("paymentMethod", [
-    "mobile_money",
-    "bank_transfer",
+    "mtn_mobile_money",
+    "airtel_money",
+    "equity_bank",
   ]).notNull(),
+  paymentType: mysqlEnum("paymentType", ["course", "certificate"]).default(
+    "course"
+  ),
   status: mysqlEnum("status", [
     "pending",
     "completed",
