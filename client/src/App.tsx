@@ -24,6 +24,7 @@ import AdminCourseModeration from "./pages/AdminCourseModeration";
 import AdminPayments from "./pages/AdminPayments";
 import AdminSettings from "./pages/AdminSettings";
 import AdminCertificates from "./pages/AdminCertificates";
+import AdminEnrollments from "./pages/AdminEnrollments";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function Router() {
@@ -67,6 +68,7 @@ function Router() {
       <Route path={"/admin/users"} component={AdminUsers} />
       <Route path={"/admin/courses"} component={AdminCourseModeration} />
       <Route path={"/admin/payments"} component={AdminPayments} />
+      <Route path={"/admin/enrollments"} component={AdminEnrollments} />
       <Route path={"/admin/certificates"} component={AdminCertificates} />
       <Route path={"/admin/settings"} component={AdminSettings} />
 

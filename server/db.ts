@@ -518,6 +518,27 @@ export async function getAllEnrollments() {
   return await db.select().from(enrollments);
 }
 
+export async function getEnrollmentsWithDetails() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select({
+      id: enrollments.id,
+      studentId: enrollments.studentId,
+      courseId: enrollments.courseId,
+      enrolledAt: enrollments.enrolledAt,
+      completedAt: enrollments.completedAt,
+      certificateId: enrollments.certificateId,
+      studentName: users.name,
+      studentEmail: users.email,
+      courseTitle: courses.title,
+    })
+    .from(enrollments)
+    .leftJoin(users, eq(enrollments.studentId, users.id))
+    .leftJoin(courses, eq(enrollments.courseId, courses.id))
+    .orderBy(desc(enrollments.enrolledAt));
+}
+
 export async function getAllCertificates() {
   const db = await getDb();
   if (!db) return [];

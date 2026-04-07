@@ -165,6 +165,10 @@ export const appRouter = router({
       };
     }),
 
+    getAllEnrollments: adminProcedure.query(async () => {
+      return await db.getEnrollmentsWithDetails();
+    }),
+
     getAllPayments: adminProcedure.query(async () => {
       return await db.getAllPayments();
     }),

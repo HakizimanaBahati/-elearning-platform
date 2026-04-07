@@ -135,6 +135,7 @@ export default function AdminDashboard() {
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="users">Users</TabsTrigger>
+            <TabsTrigger value="enrollments">Enrollments</TabsTrigger>
             <TabsTrigger value="payments">Payments</TabsTrigger>
             <TabsTrigger value="certificates">Certificates</TabsTrigger>
           </TabsList>
@@ -203,6 +204,28 @@ export default function AdminDashboard() {
                     className="bg-indigo-600 hover:bg-indigo-700"
                   >
                     Open User Management <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="enrollments" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Enrollment Management</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-4">
+                  <p className="text-slate-600 mb-4">
+                    View all student course enrollments
+                  </p>
+                  <Button
+                    onClick={() => setLocation("/admin/enrollments")}
+                    className="bg-indigo-600 hover:bg-indigo-700"
+                  >
+                    Open Enrollment Management{" "}
+                    <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </div>
               </CardContent>
