@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Learning Platform API Documentation</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; background: #f5f5f5; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 10px; margin-bottom: 30px; }
+        h1 { font-size: 2.5em; margin-bottom: 10px; }
+        h2 { color: #667eea; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin: 30px 0 20px; font-size: 1.8em; }
+        h3 { color: #764ba2; margin: 25px 0 15px; font-size: 1.3em; }
+        h4 { color: #555; margin: 20px 0 10px; font-size: 1.1em; background: #eee; padding: 8px 12px; border-radius: 5px; }
+        code { background: #2d2d2d; color: #f8f8f2; padding: 2px 6px; border-radius: 3px; font-family: 'Fira Code', 'Consolas', monospace; font-size: 0.9em; }
+        pre { background: #2d2d2d; color: #f8f8f2; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 15px 0; }
+        pre code { background: none; padding: 0; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        th { background: #667eea; color: white; padding: 15px; text-align: left; }
+        td { padding: 12px 15px; border-bottom: 1px solid #eee; }
+        tr:hover { background: #f8f8ff; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.85em; font-weight: bold; margin-right: 10px; }
+        .badge-public { background: #d4edda; color: #155724; }
+        .badge-protected { background: #fff3cd; color: #856404; }
+        .badge-admin { background: #f8d7da; color: #721c24; }
+        .badge-query { background: #cce5ff; color: #004085; }
+        .badge-mutation { background: #e2e3e5; color: #383d41; }
+        .toc { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .toc ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+        .toc a { color: #667eea; text-decoration: none; padding: 8px 12px; display: block; background: #f8f8ff; border-radius: 5px; transition: all 0.3s; }
+        .toc a:hover { background: #667eea; color: white; }
+        .endpoint { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin: 15px 0; border-left: 4px solid #667eea; }
+        .endpoint-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .method { font-weight: bold; padding: 6px 12px; border-radius: 5px; font-size: 0.9em; }
+        .method-get { background: #28a745; color: white; }
+        .method-post { background: #007bff; color: white; }
+        .path { font-family: monospace; font-size: 1.1em; color: #333; }
+        .section { margin-top: 40px; }
+        .model { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin: 15px 0; }
+        .model pre { background: #f8f9fa; color: #333; border: 1px solid #ddd; }
+        .status { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 30px; }
+        .status-item { background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .status-item strong { color: #667eea; }
+        nav { position: sticky; top: 0; background: white; padding: 15px; border-bottom: 1px solid #ddd; margin-bottom: 20px; z-index: 100; }
+        nav a { margin-right: 20px; color: #667eea; text-decoration: none; font-weight: 500; }
+        nav a:hover { text-decoration: underline; }
+        .error-box { background: #f8d7da; border-left: 4px solid #f5c6cb; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .search-box { width: 100%; padding: 15px; border: 2px solid #667eea; border-radius: 8px; font-size: 1.1em; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>E-Learning Platform API Documentation</h1>
+            <p>Complete API reference for the E-Learning Platform</p>
+            <p style="margin-top: 15px; opacity: 0.9;"><strong>Base URL:</strong> <code style="background: rgba(0,0,0,0.2);">http://localhost:3000/api/trpc</code></p>
+        </header>
+
+        <nav>
+            <a href="#overview">Overview</a>
+            <a href="#auth">Auth</a>
+            <a href="#courses">Courses</a>
+            <a href="#lessons">Lessons</a>
+            <a href="#modules">Modules</a>
+            <a href="#enrollments">Enrollments</a>
+            <a href="#progress">Progress</a>
+            <a href="#payments">Payments</a>
+            <a href="#models">Models</a>
+        </nav>
+
+        <div id="overview" class="section">
+            <h2>Overview</h2>
+            <div class="toc">
+                <h3>API Index</h3>
+                <ul>
+                    <li><a href="#system">system (2)</a></li>
+                    <li><a href="#auth">auth (5)</a></li>
+                    <li><a href="#admin">admin (12)</a></li>
+                    <li><a href="#courses">courses (6)</a></li>
+                    <li><a href="#lessons">lessons (6)</a></li>
+                    <li><a href="#modules">modules (5)</a></li>
+                    <li><a href="#enrollments">enrollments (4)</a></li>
+                    <li><a href="#progress">progress (3)</a></li>
+                    <li><a href="#certificates">certificates (3)</a></li>
+                    <li><a href="#payments">payments (3)</a></li>
+                    <li><a href="#chat">chat (3)</a></li>
+                </ul>
+            </div>
+
+            <h3>Authentication Levels</h3>
+            <table>
+                <tr><th>Level</th><th>Description</th></tr>
+                <tr><td><span class="badge badge-public">Public</span></td><td>No authentication required</td></tr>
+                <tr><td><span class="badge badge-protected">Protected</span></td><td>Requires valid session cookie</td></tr>
+                <tr><td><span class="badge badge-admin">Admin</span></td><td>Requires admin role + valid session</td></tr>
+            </table>
+
+            <h3>HTTP Status Codes</h3>
+            <table>
+                <tr><th>Code</th><th>Meaning</th></tr>
+                <tr><td><code>200</code></td><td>Success</td></tr>
+                <tr><td><code>400</code></td><td>Bad Request - Invalid input</td></tr>
+                <tr><td><code>401</code></td><td>Unauthorized - Invalid credentials</td></tr>
+                <tr><td><code>403</code></td><td>Forbidden - Insufficient permissions</td></tr>
+                <tr><td><code>404</code></td><td>Not Found</td></tr>
+                <tr><td><code>409</code></td><td>Conflict - Resource already exists</td></tr>
+            </table>
+
+            <h3>Quick Examples</h3>
+            <h4>cURL</h4>
+            <pre><code># Login
+curl -X POST http://localhost:3000/api/trpc/auth.login \
+  -H "Content-Type: application/json" \
+  -d '{"json": {"email": "user@example.com", "password": "password123"}}'
+
+# Get courses (public)
+curl http://localhost:3000/api/trpc/courses.list
+
+# Create course (authenticated)
+curl -X POST http://localhost:3000/api/trpc/courses.create \
+  -H "Content-Type: application/json" \
+  -b "session_token=your_token" \
+  -d '{"json": {"title": "My Course"}}'</code></pre>
+
+            <h4>JavaScript/TypeScript</h4>
+            <pre><code>import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
+import type { AppRouter } from './server/routers';
+
+const trpc = createTRPCProxyClient<AppRouter>({
+  links: [httpBatchLink({ url: 'http://localhost:3000/api/trpc' })],
+});
+
+const courses = await trpc.courses.list.query();
+const user = await trpc.auth.login.mutate({
+  email: 'user@example.com',
+  password: 'password123'
+});</code></pre>
+        </div>
+
+        <div id="system" class="section">
+            <h2>system</h2>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-public">Public</span>
+                    <span class="path">system.health</span>
+                </div>
+                <p>Check API health status</p>
+                <h4>Input</h4>
+                <pre><code>{
+  timestamp: number  // Client timestamp (cannot be negative)
+}</code></pre>
+                <h4>Output</h4>
+                <pre><code>{ ok: boolean }</code></pre>
+                <p><strong>Example:</strong> <code>/api/trpc/system.health?input={"timestamp":1699900000}</code></p>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-admin">Admin</span>
+                    <span class="path">system.notifyOwner</span>
+                </div>
+                <p>Send notification to platform owner</p>
+                <h4>Input</h4>
+                <pre><code>{
+  title: string    // Min 1 character
+  content: string  // Min 1 character
+}</code></pre>
+                <h4>Output</h4>
+                <pre><code>{ success: boolean }</code></pre>
+            </div>
+        </div>
+
+        <div id="auth" class="section">
+            <h2>auth</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-public">Public</span>
+                    <span class="path">auth.me</span>
+                </div>
+                <p>Get current authenticated user</p>
+                <h4>Output</h4>
+                <pre><code>User object or null</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-public">Public</span>
+                    <span class="path">auth.logout</span>
+                </div>
+                <p>Log out current user</p>
+                <h4>Output</h4>
+                <pre><code>{ success: true }</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-public">Public</span>
+                    <span class="path">auth.login</span>
+                </div>
+                <p>Authenticate user and create session</p>
+                <h4>Input</h4>
+                <pre><code>{
+  email: string    // Valid email format
+  password: string
+}</code></pre>
+                <h4>Output</h4>
+                <pre><code>User object</code></pre>
+                <div class="error-box"><strong>Errors:</strong> UNAUTHORIZED - Invalid credentials</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-public">Public</span>
+                    <span class="path">auth.register</span>
+                </div>
+                <p>Register new user account</p>
+                <h4>Input</h4>
+                <pre><code>{
+  email: string
+  password: string  // Min 6 characters
+  name: string     // Min 2 characters
+  role?: "user" | "instructor" | "admin"  // Default: "user"
+}</code></pre>
+                <h4>Output</h4>
+                <pre><code>User object</code></pre>
+                <div class="error-box"><strong>Errors:</strong> CONFLICT - Email already exists</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">auth.updateProfile</span>
+                </div>
+                <p>Update current user's profile</p>
+                <h4>Input</h4>
+                <pre><code>{
+  name?: string  // Min 2 characters
+}</code></pre>
+                <h4>Output</h4>
+                <pre><code>Updated User object</code></pre>
+            </div>
+        </div>
+
+        <div id="admin" class="section">
+            <h2>admin</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-admin">Admin</span>
+                    <span class="path">admin.getAllUsers</span>
+                </div>
+                <p>Get all users in the system</p>
+                <h4>Output</h4>
+                <pre><code>Array of User objects</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-admin">Admin</span>
+                    <span class="path">admin.createUser</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{
+  name: string
+  email: string    // Valid email
+  password: string  // Min 6 chars
+  role: "user" | "instructor" | "admin"
+}</code></pre>
+                <h4>Output</h4>
+                <pre><code>Created User object</code></pre>
+                <div class="error-box"><strong>Errors:</strong> CONFLICT - Email already exists</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-admin">Admin</span>
+                    <span class="path">admin.updateUserRole</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ userId: number, role: "user" | "instructor" | "admin" }</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-admin">Admin</span>
+                    <span class="path">admin.deleteUser</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ userId: number }</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-admin">Admin</span>
+                    <span class="path">admin.getStats</span>
+                </div>
+                <p>Get platform statistics</p>
+                <h4>Output</h4>
+                <pre><code>{
+  totalUsers: number
+  totalInstructors: number
+  totalAdmins: number
+  totalCourses: number
+  publishedCourses: number
+  totalEnrollments: number
+  totalRevenue: number
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-admin">Admin</span>
+                    <span class="path">admin.getAllPayments</span>
+                </div>
+                <p>Get all payments</p>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-admin">Admin</span>
+                    <span class="path">admin.updatePaymentStatus</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{
+  paymentId: number
+  status: "completed" | "pending" | "failed"
+}</code></pre>
+            </div>
+        </div>
+
+        <div id="courses" class="section">
+            <h2>courses</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-public">Public</span>
+                    <span class="path">courses.list</span>
+                </div>
+                <p>Get all published courses</p>
+                <h4>Output</h4>
+                <pre><code>Array of Course objects</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-public">Public</span>
+                    <span class="path">courses.getById</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ id: number }</code></pre>
+                <div class="error-box"><strong>Errors:</strong> NOT_FOUND</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">courses.getByInstructor</span>
+                </div>
+                <p>Get courses by current instructor</p>
+                <div class="error-box"><strong>Errors:</strong> FORBIDDEN - Not instructor/admin</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">courses.create</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{
+  title: string                              // Required
+  description?: string
+  category?: string
+  level?: "beginner" | "intermediate" | "advanced"
+  thumbnail?: string
+  price?: string                             // Default "0"
+}</code></pre>
+                <div class="error-box"><strong>Errors:</strong> FORBIDDEN</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">courses.update</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{
+  id: number
+  title?: string
+  description?: string
+  category?: string
+  level?: "beginner" | "intermediate" | "advanced"
+  thumbnail?: string
+  price?: string
+  isPublished?: boolean
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">courses.delete</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ id: number }</code></pre>
+            </div>
+        </div>
+
+        <div id="lessons" class="section">
+            <h2>lessons</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-public">Public</span>
+                    <span class="path">lessons.getByCourse</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ courseId: number }</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-public">Public</span>
+                    <span class="path">lessons.getById</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ id: number }</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">lessons.create</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{
+  courseId: number
+  title: string                    // Min 1
+  description?: string
+  lessonType?: "video" | "document"  // Default "video"
+  moduleId?: number
+  videoUrl?: string
+  videoKey?: string
+  content?: string
+  duration?: number
+  order: number
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">lessons.update</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{
+  id: number
+  title?: string
+  description?: string
+  videoUrl?: string
+  videoKey?: string
+  duration?: number
+  transcription?: string
+  order?: number
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">lessons.delete</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ id: number }</code></pre>
+            </div>
+        </div>
+
+        <div id="modules" class="section">
+            <h2>modules</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">modules.getByCourse</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ courseId: number }</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">modules.create</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{
+  courseId: number
+  title: string        // Min 1
+  description?: string
+  order: number
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">modules.update</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{
+  id: number
+  title?: string
+  description?: string
+  order?: number
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">modules.delete</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ id: number }</code></pre>
+            </div>
+        </div>
+
+        <div id="enrollments" class="section">
+            <h2>enrollments</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">enrollments.list</span>
+                </div>
+                <p>Get current user's enrollments</p>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">enrollments.enroll</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ courseId: number }</code></pre>
+                <div class="error-box"><strong>Errors:</strong> NOT_FOUND, CONFLICT - Already enrolled</div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">enrollments.getForCourse</span>
+                </div>
+                <p>Get enrollments for a course (instructor view)</p>
+                <h4>Input</h4>
+                <pre><code>{ courseId: number }</code></pre>
+            </div>
+        </div>
+
+        <div id="progress" class="section">
+            <h2>progress</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">progress.record</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{
+  enrollmentId: number
+  lessonId: number
+  watchedDuration?: number
+  notes?: string
+  completed?: boolean
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">progress.getEnrollmentProgress</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ enrollmentId: number }</code></pre>
+            </div>
+        </div>
+
+        <div id="certificates" class="section">
+            <h2>certificates</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">certificates.list</span>
+                </div>
+                <p>Get current user's certificates</p>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-public">Public</span>
+                    <span class="path">certificates.getById</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ id: number }</code></pre>
+            </div>
+        </div>
+
+        <div id="payments" class="section">
+            <h2>payments</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">payments.create</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{
+  courseId: number
+  amount: string
+  paymentMethod: "mtn_mobile_money" | "airtel_money" | "equity_bank"
+  paymentType?: "course" | "certificate"  // Default "course"
+}</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">payments.list</span>
+                </div>
+                <p>Get current user's payments</p>
+            </div>
+        </div>
+
+        <div id="chat" class="section">
+            <h2>chat</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-mutation">Mutation</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">chat.sendMessage</span>
+                </div>
+                <p>Send a chat message and get AI response</p>
+                <h4>Input</h4>
+                <pre><code>{
+  courseId?: number
+  lessonId?: number
+  content: string  // Min 1
+}</code></pre>
+                <h4>Output</h4>
+                <pre><code>{ message: string }  // AI response</code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="badge badge-query">Query</span>
+                    <span class="badge badge-protected">Protected</span>
+                    <span class="path">chat.getHistory</span>
+                </div>
+                <h4>Input</h4>
+                <pre><code>{ courseId?: number }</code></pre>
+            </div>
+        </div>
+
+        <div id="models" class="section">
+            <h2>Data Models</h2>
+
+            <div class="model">
+                <h3>User</h3>
+                <pre><code>{
+  id: number
+  openId: string
+  email: string
+  name: string | null
+  role: "user" | "instructor" | "admin"
+  password: string
+  createdAt: Date
+  updatedAt: Date
+}</code></pre>
+            </div>
+
+            <div class="model">
+                <h3>Course</h3>
+                <pre><code>{
+  id: number
+  instructorId: number
+  title: string
+  description: string | null
+  category: string | null
+  level: "beginner" | "intermediate" | "advanced"
+  thumbnail: string | null
+  price: string
+  isPublished: boolean
+  requiresCertificate: boolean
+  createdAt: Date
+  updatedAt: Date
+}</code></pre>
+            </div>
+
+            <div class="model">
+                <h3>Lesson</h3>
+                <pre><code>{
+  id: number
+  courseId: number
+  moduleId: number | null
+  title: string
+  description: string | null
+  lessonType: "video" | "document"
+  videoUrl: string | null
+  videoKey: string | null
+  content: string | null
+  duration: number | null
+  transcription: string | null
+  order: number
+  createdAt: Date
+  updatedAt: Date
+}</code></pre>
+            </div>
+
+            <div class="model">
+                <h3>Module</h3>
+                <pre><code>{
+  id: number
+  courseId: number
+  title: string
+  description: string | null
+  order: number
+  createdAt: Date
+  updatedAt: Date
+}</code></pre>
+            </div>
+
+            <div class="model">
+                <h3>Enrollment</h3>
+                <pre><code>{
+  id: number
+  studentId: number
+  courseId: number
+  enrolledAt: Date
+}</code></pre>
+            </div>
+
+            <div class="model">
+                <h3>Progress</h3>
+                <pre><code>{
+  id: number
+  enrollmentId: number
+  lessonId: number
+  watchedDuration: number | null
+  notes: string | null
+  completedAt: Date | null
+  createdAt: Date
+  updatedAt: Date
+}</code></pre>
+            </div>
+
+            <div class="model">
+                <h3>Payment</h3>
+                <pre><code>{
+  id: number
+  studentId: number
+  courseId: number
+  amount: string
+  paymentMethod: "mtn_mobile_money" | "airtel_money" | "equity_bank"
+  paymentType: "course" | "certificate"
+  status: "pending" | "completed" | "failed"
+  createdAt: Date
+  updatedAt: Date
+}</code></pre>
+            </div>
+
+            <div class="model">
+                <h3>Certificate</h3>
+                <pre><code>{
+  id: number
+  studentId: number
+  courseId: number
+  issuedAt: Date
+}</code></pre>
+            </div>
+
+            <div class="model">
+                <h3>ChatMessage</h3>
+                <pre><code>{
+  id: number
+  studentId: number
+  courseId: number | null
+  lessonId: number | null
+  role: "user" | "assistant"
+  content: string
+  createdAt: Date
+}</code></pre>
+            </div>
+        </div>
+
+        <footer style="margin-top: 50px; padding: 20px; text-align: center; color: #666; border-top: 1px solid #ddd;">
+            <p>E-Learning Platform API Documentation</p>
+        </footer>
+    </div>
+</body>
+</html>
